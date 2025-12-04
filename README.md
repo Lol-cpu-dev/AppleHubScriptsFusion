@@ -1,36 +1,72 @@
--- Apple Hub - TOTALMENTE RESPONSIVO PARA PC E MOBILE
--- Script com estilo maçã, emojis animados, sombra, arrastável e botões de controle
+-- Apple Hub - RESPONSIVO PARA PC E MOBILE
+-- Detecta automaticamente o dispositivo e ajusta o tamanho
 
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local GuiService = game:GetService("GuiService")
+local Players = game:GetService("Players")
 
 -- Detectar dispositivo automaticamente
 local isMobile = UserInputService.TouchEnabled
-local isDesktop = UserInputService.MouseEnabled
+local player = Players.LocalPlayer
 local screenSize = workspace.CurrentCamera.ViewportSize
 
--- Configurações responsivas
+-- Configurações
 local DRAG_SPEED = 0.25
 local EMOJI_ANIMATION_SPEED = 2
 
--- Tamanhos responsivos
-local MAXIMIZED_SIZE = isMobile and UDim2.new(0.85, 0, 0.75, 0) or UDim2.new(0, 400, 0, 710)
-local MINIMIZED_SIZE = isMobile and UDim2.new(0.4, 0, 0, 70) or UDim2.new(0, 200, 0, 60)
+-- Tamanhos baseados no dispositivo
+local MAXIMIZED_SIZE, MINIMIZED_SIZE
+local TITLE_HEIGHT, BUTTON_HEIGHT, ICON_SIZE
+local FONT_TITLE, FONT_SCRIPTS, FONT_BUTTON, FONT_ICON
+local PADDING, SCROLLBAR_SIZE, CORNER_RADIUS, BUTTON_CORNER
 
--- Dimensões responsivas
-local TITLE_HEIGHT = isMobile and 50 or 40
-local BUTTON_HEIGHT = isMobile and 65 or 60
-local ICON_SIZE = isMobile and 45 or 40
-local FONT_TITLE = isMobile and 24 or 20
-local FONT_SCRIPTS = isMobile and 26 or 22
-local FONT_BUTTON = isMobile and 19 or 18
-local FONT_ICON = isMobile and 26 or 24
-local PADDING = isMobile and 15 or 10
-local SCROLLBAR_SIZE = isMobile and 8 or 5
-local CORNER_RADIUS = isMobile and 20 or 15
-local BUTTON_CORNER = isMobile and 15 or 10
+-- Configurações para PC
+if not isMobile then
+    MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 710)
+    MINIMIZED_SIZE = UDim2.new(0, 200, 0, 60)
+    TITLE_HEIGHT = 40
+    BUTTON_HEIGHT = 60
+    ICON_SIZE = 40
+    FONT_TITLE = 20
+    FONT_SCRIPTS = 22
+    FONT_BUTTON = 18
+    FONT_ICON = 24
+    PADDING = 10
+    SCROLLBAR_SIZE = 5
+    CORNER_RADIUS = 15
+    BUTTON_CORNER = 10
+-- Configurações para MOBILE
+else
+    -- Para mobile, ajustamos a altura para caber melhor na tela
+    local safeArea = GuiService:GetGuiInset()
+    local usableHeight = screenSize.Y - safeArea.Y
+    
+    -- Calcular altura máxima baseada na tela disponível
+    local maxHeight = math.min(usableHeight * 0.85, 650) -- 85% da altura ou máximo 650px
+    MAXIMIZED_SIZE = UDim2.new(0.9, 0, 0, maxHeight) -- 90% da largura
+    MINIMIZED_SIZE = UDim2.new(0.4, 0, 0, 70)
+    
+    TITLE_HEIGHT = 50
+    BUTTON_HEIGHT = 65
+    ICON_SIZE = 45
+    FONT_TITLE = 24
+    FONT_SCRIPTS = 26
+    FONT_BUTTON = 19
+    FONT_ICON = 26
+    PADDING = 15
+    SCROLLBAR_SIZE = 8
+    CORNER_RADIUS = 20
+    BUTTON_CORNER = 15
+end
+
+print("📱 Dispositivo detectado: " .. (isMobile and "MOBILE" or "PC"))
+print("📏 Tamanho da tela: " .. math.floor(screenSize.X) .. "x" .. math.floor(screenSize.Y))
+if isMobile then
+    local safeArea = GuiService:GetGuiInset()
+    print("📐 Área segura: " .. math.floor(safeArea.Y) .. "px")
+end
 
 -- Cria a interface principal
 local ScreenGui = Instance.new("ScreenGui")
@@ -38,20 +74,28 @@ ScreenGui.Name = "AppleHub"
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.ResetOnSpawn = false
 
+-- Proteger a GUI
 if gethui then
     ScreenGui.Parent = gethui()
 elseif syn and syn.protect_gui then
     syn.protect_gui(ScreenGui)
     ScreenGui.Parent = game:GetService("CoreGui")
-else
+elseif game:GetService("CoreGui"):FindFirstChild("RobloxGui") then
     ScreenGui.Parent = game:GetService("CoreGui")
+else
+    ScreenGui.Parent = player:WaitForChild("PlayerGui")
 end
 
 -- Frame principal (maçã)
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "AppleFrame"
 MainFrame.Size = MAXIMIZED_SIZE
-MainFrame.Position = isMobile and UDim2.new(0.075, 0, 0.125, 0) or UDim2.new(0.5, -200, 0.5, -355)
+-- Posição inicial baseada no dispositivo
+if isMobile then
+    MainFrame.Position = UDim2.new(0.05, 0, 0.1, 0)
+else
+    MainFrame.Position = UDim2.new(0.5, -200, 0.5, -355)
+end
 MainFrame.BackgroundColor3 = Color3.fromRGB(255, 59, 48) -- Vermelho maçã
 MainFrame.BackgroundTransparency = 0.1
 MainFrame.BorderSizePixel = 0
@@ -95,7 +139,7 @@ EmojiLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 -- Título
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Name = "Title"
-TitleLabel.Size = UDim2.new(1, isMobile and -120 or -100, 1, 0)
+TitleLabel.Size = UDim2.new(1, isMobile and -140 or -120, 1, 0)
 TitleLabel.Position = UDim2.new(0, isMobile and 70 or 50, 0, 0)
 TitleLabel.BackgroundTransparency = 1
 TitleLabel.Text = "Apple Hub " .. (isMobile and "📱" or "🖥️")
@@ -104,42 +148,44 @@ TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Botões de controle
+-- BOTÕES DE CONTROLE
 local ControlFrame = Instance.new("Frame")
 ControlFrame.Name = "Controls"
-ControlFrame.Size = UDim2.new(0, isMobile and 100 or 80, 0, TITLE_HEIGHT)
-ControlFrame.Position = UDim2.new(1, isMobile and -105 or -90, 0, 0)
+ControlFrame.Size = UDim2.new(0, isMobile and 120 or 100, 0, TITLE_HEIGHT)
+ControlFrame.Position = UDim2.new(1, isMobile and -125 or -105, 0, 0)
 ControlFrame.BackgroundTransparency = 1
 
 -- Botão minimizar/maximizar
 local ToggleSizeButton = Instance.new("TextButton")
 ToggleSizeButton.Name = "ToggleSize"
-ToggleSizeButton.Size = UDim2.new(0, isMobile and 35 or 30, 0, isMobile and 35 or 30)
-ToggleSizeButton.Position = UDim2.new(0, 5, isMobile and 7.5 or 5, 0)
+ToggleSizeButton.Size = UDim2.new(0, isMobile and 40 or 35, 0, isMobile and 40 or 35)
+ToggleSizeButton.Position = UDim2.new(0, isMobile and 5 or 5, isMobile and 5 or 2.5, 0)
 ToggleSizeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ToggleSizeButton.BackgroundTransparency = 0.8
+ToggleSizeButton.BackgroundTransparency = 0.7
 ToggleSizeButton.Text = "🗖"
-ToggleSizeButton.TextSize = isMobile and 20 or 18
-ToggleSizeButton.Font = Enum.Font.Gotham
+ToggleSizeButton.TextSize = isMobile and 22 or 18
+ToggleSizeButton.Font = Enum.Font.GothamBold
 ToggleSizeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 ToggleSizeButton.AutoButtonColor = false
 ToggleSizeButton.Active = true
 ToggleSizeButton.Selectable = true
+ToggleSizeButton.Visible = true
 
 -- Botão fechar
 local CloseButton = Instance.new("TextButton")
 CloseButton.Name = "Close"
-CloseButton.Size = UDim2.new(0, isMobile and 35 or 30, 0, isMobile and 35 or 30)
-CloseButton.Position = UDim2.new(0, isMobile and 50 or 45, isMobile and 7.5 or 5, 0)
-CloseButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.BackgroundTransparency = 0.8
+CloseButton.Size = UDim2.new(0, isMobile and 40 or 35, 0, isMobile and 40 or 35)
+CloseButton.Position = UDim2.new(0, isMobile and 55 or 50, isMobile and 5 or 2.5, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+CloseButton.BackgroundTransparency = 0.7
 CloseButton.Text = "✕"
-CloseButton.TextSize = isMobile and 20 or 18
-CloseButton.Font = Enum.Font.Gotham
-CloseButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+CloseButton.TextSize = isMobile and 22 or 18
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.AutoButtonColor = false
 CloseButton.Active = true
 CloseButton.Selectable = true
+CloseButton.Visible = true
 
 -- Conteúdo principal
 local ContentFrame = Instance.new("Frame")
@@ -168,7 +214,7 @@ ScriptsContainer.BackgroundTransparency = 1
 ScriptsContainer.BorderSizePixel = 0
 ScriptsContainer.ScrollBarThickness = SCROLLBAR_SIZE
 ScriptsContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 430)
+ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, isMobile and 470 or 430)
 ScriptsContainer.ScrollingDirection = Enum.ScrollingDirection.Y
 ScriptsContainer.VerticalScrollBarInset = Enum.ScrollBarInset.Always
 
@@ -375,12 +421,17 @@ end
 -- Sistema de arrastar para mobile e PC
 local function updateDrag(input)
     local delta = input.Position - dragStart
-    MainFrame.Position = UDim2.new(
-        startPos.X.Scale, 
-        startPos.X.Offset + delta.X,
-        startPos.Y.Scale, 
-        startPos.Y.Offset + delta.Y
-    )
+    local newX = startPos.X.Offset + delta.X
+    local newY = startPos.Y.Offset + delta.Y
+    
+    -- Limitar movimento para não sair da tela
+    local maxX = screenSize.X - MainFrame.AbsoluteSize.X
+    local maxY = screenSize.Y - MainFrame.AbsoluteSize.Y
+    
+    newX = math.clamp(newX, 0, maxX)
+    newY = math.clamp(newY, 0, maxY)
+    
+    MainFrame.Position = UDim2.new(0, newX, 0, newY)
 end
 
 -- Configurar arrastar para mobile e PC
@@ -392,18 +443,14 @@ local function setupDragging(frame)
             dragStart = position
             startPos = MainFrame.Position
             
-            -- Feedback visual para mobile
-            if isMobile then
-                frame.BackgroundTransparency = 0.1
-            end
+            -- Feedback visual
+            frame.BackgroundTransparency = 0.1
             
             -- Conectar evento de fim
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     isDragging = false
-                    if isMobile then
-                        frame.BackgroundTransparency = 0.2
-                    end
+                    frame.BackgroundTransparency = 0.2
                 end
             end)
         end
@@ -581,11 +628,25 @@ end
 -- Animação contínua do emoji
 RunService.RenderStepped:Connect(animateEmoji)
 
+-- Ajustar posição inicial para mobile
+if isMobile then
+    task.wait(0.1)
+    local safeArea = GuiService:GetGuiInset()
+    -- Centralizar melhor na tela
+    local posX = (screenSize.X - MainFrame.AbsoluteSize.X) / 2
+    local posY = (screenSize.Y - MainFrame.AbsoluteSize.Y - safeArea.Y) / 2 + safeArea.Y
+    
+    MainFrame.Position = UDim2.new(0, posX, 0, posY)
+    
+    print("📱 Mobile: Hub ajustado para " .. math.floor(MainFrame.AbsoluteSize.Y) .. "px de altura")
+    print("📍 Posição: " .. math.floor(posX) .. "x" .. math.floor(posY))
+end
+
 -- Inicialização
 print("🍎 Apple Hub carregado com sucesso!")
-print("📱 Dispositivo: " .. (isMobile and "Mobile (Touch)" or "PC (Mouse)"))
-print("📏 Tamanho da tela: " .. math.floor(screenSize.X) .. "x" .. math.floor(screenSize.Y))
-print("📜 Scripts disponíveis:")
+print("📱 Dispositivo: " .. (isMobile and "MOBILE 📱" or "PC 🖥️"))
+print("📏 Tamanho do hub: " .. math.floor(MainFrame.AbsoluteSize.X) .. "x" .. math.floor(MainFrame.AbsoluteSize.Y))
+print("📜 Scripts disponíveis (6 total):")
 print("1. 👑 Nameless Hub [OP]")
 print("2. 🌶️ Chilli Hub [OP]")
 print("3. ⚡ UCT HUB [OP]")
@@ -646,33 +707,15 @@ if not isMobile then
     end
 end
 
--- Ajustar posição inicial para mobile (evitar sobreposição com controles)
-if isMobile then
-    task.wait(0.1)
-    local safeArea = GuiService:GetGuiInset()
-    MainFrame.Position = UDim2.new(
-        0.075, 
-        safeArea.X,
-        0.125, 
-        safeArea.Y
-    )
-end
-
 -- Efeitos especiais para mobile (simulação de feedback tátil)
 if isMobile then
     local function addMobileTapEffect(button)
         button.TouchTap:Connect(function()
-            -- Simular leve efeito visual de toque
-            local originalSize = button.Size
-            button.Size = UDim2.new(
-                originalSize.X.Scale, 
-                originalSize.X.Offset * 0.95,
-                originalSize.Y.Scale, 
-                originalSize.Y.Offset * 0.95
-            )
-            
-            task.wait(0.08)
-            button.Size = originalSize
+            -- Efeito visual de toque
+            local originalTransparency = button.BackgroundTransparency
+            button.BackgroundTransparency = originalTransparency - 0.15
+            task.wait(0.1)
+            button.BackgroundTransparency = originalTransparency
         end)
     end
     
@@ -685,80 +728,11 @@ if isMobile then
     end
 end
 
--- Ajustar interface quando a tela mudar de tamanho
-local function adjustForScreenSize()
-    if isMobile then
-        local safeArea = GuiService:GetGuiInset()
-        local usableHeight = screenSize.Y - safeArea.Y
-        
-        if not isMinimized then
-            MainFrame.Size = UDim2.new(0.85, 0, 0, math.min(usableHeight * 0.75, 700))
-        end
-        
-        -- Reposicionar para evitar bordas
-        if MainFrame.Position.Y.Offset + MainFrame.Size.Y.Offset > usableHeight then
-            MainFrame.Position = UDim2.new(
-                MainFrame.Position.X.Scale,
-                MainFrame.Position.X.Offset,
-                0.05,
-                safeArea.Y
-            )
-        end
-    end
-end
-
--- Ajustar inicialmente
-adjustForScreenSize()
-
--- Ajustar quando a tela for redimensionada
-screenSize:GetPropertyChangedSignal("X"):Connect(adjustForScreenSize)
-screenSize:GetPropertyChangedSignal("Y"):Connect(adjustForScreenSize)
-
 -- Ajustar tamanho inicial do canvas
 task.wait(0.2)
 ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 20)
 
--- Aviso responsivo
-local warningLabel = Instance.new("TextLabel")
-warningLabel.Name = "Warning"
-warningLabel.Size = UDim2.new(1, -(PADDING * 2), 0, isMobile and 28 or 25)
-warningLabel.Position = UDim2.new(0, PADDING, 1, -(isMobile and 32 or 30))
-warningLabel.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
-warningLabel.BackgroundTransparency = 0.3
-warningLabel.Text = isMobile and "⚠️ Cuidado!" or "⚠️ Cuidado com scripts perigosos!"
-warningLabel.TextSize = isMobile and 12 or 11
-warningLabel.Font = Enum.Font.GothamBold
-warningLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-warningLabel.TextXAlignment = Enum.TextXAlignment.Center
-warningLabel.Visible = false
-warningLabel.Parent = MainFrame
-
-local warningCorner = Instance.new("UICorner")
-warningCorner.CornerRadius = UDim.new(0, isMobile and 10 or 8)
-warningCorner.Parent = warningLabel
-
--- Mostrar aviso quando tocar/hover em scripts perigosos
-local function setupWarning(button)
-    if isMobile then
-        button.TouchTap:Connect(function()
-            warningLabel.Visible = true
-            task.wait(2)
-            warningLabel.Visible = false
-        end)
-    else
-        button.MouseEnter:Connect(function()
-            warningLabel.Visible = true
-        end)
-        
-        button.MouseLeave:Connect(function()
-            warningLabel.Visible = false
-        end)
-    end
-end
-
-setupWarning(LagAuraButton)
-setupWarning(AdminSpamButton)
-
--- Feedback final
-print("✅ Interface Apple Hub totalmente responsiva pronta!")
-print("🎯 Modo: " .. (isMobile and "Touch/Tap" or "Click/Hover"))
+-- Feedback visual de carregamento
+print("✅ Interface carregada com sucesso!")
+print("🎯 Modo: " .. (isMobile and "Touch/Tap" or "Mouse Click"))
+print("🔧 Botões de controle: ✅ Minimizar e Fechar funcionais")
