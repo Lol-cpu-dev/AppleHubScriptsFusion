@@ -8,7 +8,7 @@ local RunService = game:GetService("RunService")
 -- Configurações
 local DRAG_SPEED = 0.25
 local EMOJI_ANIMATION_SPEED = 2
-local MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 560)
+local MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 610)
 local MINIMIZED_SIZE = UDim2.new(0, 200, 0, 60)
 
 -- Cria a interface principal
@@ -30,7 +30,7 @@ end
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "AppleFrame"
 MainFrame.Size = MAXIMIZED_SIZE
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -280)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -305)
 MainFrame.BackgroundColor3 = Color3.fromRGB(255, 59, 48) -- Vermelho maçã
 MainFrame.BackgroundTransparency = 0.1
 MainFrame.BorderSizePixel = 0
@@ -140,7 +140,7 @@ ScriptsContainer.BackgroundTransparency = 1
 ScriptsContainer.BorderSizePixel = 0
 ScriptsContainer.ScrollBarThickness = 5
 ScriptsContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 220)
+ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 290)
 
 -- Layout dos scripts
 local UIListLayout = Instance.new("UIListLayout")
@@ -209,7 +209,7 @@ ChilliIcon.TextSize = 24
 ChilliIcon.Font = Enum.Font.GothamBold
 ChilliIcon.TextColor3 = Color3.fromRGB(255, 69, 58)
 
--- Botão UCT HUB (NOVO)
+-- Botão UCT HUB
 local UCTButton = Instance.new("TextButton")
 UCTButton.Name = "UCTHub"
 UCTButton.Size = UDim2.new(1, 0, 0, 60)
@@ -240,6 +240,37 @@ UCTIcon.TextSize = 24
 UCTIcon.Font = Enum.Font.GothamBold
 UCTIcon.TextColor3 = Color3.fromRGB(0, 191, 255)
 
+-- Botão Kurd Hub (NOVO)
+local KurdButton = Instance.new("TextButton")
+KurdButton.Name = "KurdHub"
+KurdButton.Size = UDim2.new(1, 0, 0, 60)
+KurdButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+KurdButton.BackgroundTransparency = 0.3
+KurdButton.Text = ""
+KurdButton.AutoButtonColor = false
+KurdButton.BorderSizePixel = 0
+
+local KurdLabel = Instance.new("TextLabel")
+KurdLabel.Name = "Label"
+KurdLabel.Size = UDim2.new(1, -60, 1, 0)
+KurdLabel.Position = UDim2.new(0, 50, 0, 0)
+KurdLabel.BackgroundTransparency = 1
+KurdLabel.Text = "Kurd Hub [OP]"
+KurdLabel.TextSize = 18
+KurdLabel.Font = Enum.Font.GothamBold
+KurdLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+KurdLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local KurdIcon = Instance.new("TextLabel")
+KurdIcon.Name = "Icon"
+KurdIcon.Size = UDim2.new(0, 40, 0, 40)
+KurdIcon.Position = UDim2.new(0, 5, 0.5, -20)
+KurdIcon.BackgroundTransparency = 1
+KurdIcon.Text = "🏔️"
+KurdIcon.TextSize = 24
+KurdIcon.Font = Enum.Font.GothamBold
+KurdIcon.TextColor3 = Color3.fromRGB(34, 139, 34) -- Verde montanha
+
 -- Montagem da interface
 Shadow.Parent = MainFrame
 MainFrame.Parent = ScreenGui
@@ -265,6 +296,10 @@ ChilliIcon.Parent = ChilliButton
 UCTButton.Parent = ScriptsContainer
 UCTLabel.Parent = UCTButton
 UCTIcon.Parent = UCTButton
+
+KurdButton.Parent = ScriptsContainer
+KurdLabel.Parent = KurdButton
+KurdIcon.Parent = KurdButton
 
 -- Variáveis de estado
 local isDragging = false
@@ -417,7 +452,6 @@ ChilliButton.MouseButton1Click:Connect(function()
     ChilliLabel.Text = "Chilli Hub [OP]"
 end)
 
--- Função do UCT HUB (NOVO)
 UCTButton.MouseButton1Click:Connect(function()
     animateClick(UCTButton)
     
@@ -446,6 +480,35 @@ UCTButton.MouseButton1Click:Connect(function()
     UCTLabel.Text = "UCT HUB [OP]"
 end)
 
+-- Função do Kurd Hub (NOVO)
+KurdButton.MouseButton1Click:Connect(function()
+    animateClick(KurdButton)
+    
+    -- Efeito visual de execução
+    KurdIcon.Text = "⏳"
+    KurdLabel.Text = "Executando..."
+    
+    task.wait(0.5)
+    
+    -- Executar o script
+    local success, error = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Ninja10908/S4/refs/heads/main/Kurdhub"))()
+    end)
+    
+    if success then
+        KurdIcon.Text = "✅"
+        KurdLabel.Text = "Kurd Hub [EXECUTADO]"
+    else
+        KurdIcon.Text = "❌"
+        KurdLabel.Text = "Kurd Hub [ERRO]"
+        warn("Erro ao executar Kurd Hub:", error)
+    end
+    
+    task.wait(1)
+    KurdIcon.Text = "🏔️"
+    KurdLabel.Text = "Kurd Hub [OP]"
+end)
+
 -- Efeitos hover
 local function setupHoverEffects(button, icon, label, originalText, originalIcon)
     button.MouseEnter:Connect(function()
@@ -462,18 +525,20 @@ end
 setupHoverEffects(NamelessButton, NamelessIcon, NamelessLabel, "Nameless Hub [OP]", "👑")
 setupHoverEffects(ChilliButton, ChilliIcon, ChilliLabel, "Chilli Hub [OP]", "🌶️")
 setupHoverEffects(UCTButton, UCTIcon, UCTLabel, "UCT HUB [OP]", "⚡")
+setupHoverEffects(KurdButton, KurdIcon, KurdLabel, "Kurd Hub [OP]", "🏔️")
 
 -- Animação contínua do emoji
 RunService.RenderStepped:Connect(animateEmoji)
 
 -- Inicialização
-print("Apple Hub carregado com sucesso!")
-print("Scripts disponíveis:")
-print("1. Nameless Hub [OP]")
-print("2. Chilli Hub [OP]")
-print("3. UCT HUB [OP]")
+print("🍎 Apple Hub carregado com sucesso!")
+print("📜 Scripts disponíveis:")
+print("1. 👑 Nameless Hub [OP]")
+print("2. 🌶️ Chilli Hub [OP]")
+print("3. ⚡ UCT HUB [OP]")
+print("4. 🏔️ Kurd Hub [OP]")
 
--- Adiciona borda arredondada (simulada)
+-- Adiciona borda arredondada
 local Corner = Instance.new("UICorner")
 Corner.CornerRadius = UDim.new(0, 15)
 Corner.Parent = MainFrame
@@ -483,11 +548,54 @@ ButtonCorner.CornerRadius = UDim.new(0, 10)
 ButtonCorner.Parent = NamelessButton
 ButtonCorner:Clone().Parent = ChilliButton
 ButtonCorner:Clone().Parent = UCTButton
+ButtonCorner:Clone().Parent = KurdButton
 
 local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 15)
 TitleCorner.Parent = TitleFrame
 
--- Ajusta o tamanho do canvas para os 3 botões
-task.wait(0.1)
-ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y)
+-- Ajusta o tamanho do canvas dinamicamente
+UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
+end)
+
+-- Efeito de gradiente para os botões
+local function addButtonEffect(button)
+    local Gradient = Instance.new("UIGradient")
+    Gradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 40, 40)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 20))
+    }
+    Gradient.Rotation = 90
+    Gradient.Parent = button
+    
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Color = Color3.fromRGB(100, 100, 100)
+    Stroke.Thickness = 1
+    Stroke.Transparency = 0.7
+    Stroke.Parent = button
+end
+
+-- Aplica efeitos aos botões
+addButtonEffect(NamelessButton)
+addButtonEffect(ChilliButton)
+addButtonEffect(UCTButton)
+addButtonEffect(KurdButton)
+
+-- Adiciona pequena descrição nos botões (tooltip simples)
+local function addTooltip(button, description)
+    button.MouseEnter:Connect(function()
+        -- Poderia adicionar um tooltip flutuante aqui
+        -- Por enquanto apenas muda o cursor
+        button.Mouse.Icon = "rbxasset://SystemCursors/PointingHand"
+    end)
+    
+    button.MouseLeave:Connect(function()
+        button.Mouse.Icon = ""
+    end)
+end
+
+addTooltip(NamelessButton, "Execute Nameless Hub - Script poderoso")
+addTooltip(ChilliButton, "Execute Chilli Hub - Script picante")
+addTooltip(UCTButton, "Execute UCT HUB - Script eletrizante")
+addTooltip(KurdButton, "Execute Kurd Hub - Script das montanhas")
