@@ -24,7 +24,7 @@ local PADDING, SCROLLBAR_SIZE, CORNER_RADIUS, BUTTON_CORNER
 
 -- Configurações para PC
 if not isMobile then
-    MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 710)
+    MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 780) -- Aumentado para 780px
     MINIMIZED_SIZE = UDim2.new(0, 200, 0, 60)
     TITLE_HEIGHT = 40
     BUTTON_HEIGHT = 60
@@ -44,17 +44,17 @@ else
     local usableHeight = screenSize.Y - safeArea.Y
     
     -- Calcular altura máxima baseada na tela disponível
-    local maxHeight = math.min(usableHeight * 0.85, 650) -- 85% da altura ou máximo 650px
+    local maxHeight = math.min(usableHeight * 0.85, 720) -- Aumentado para 720px
     MAXIMIZED_SIZE = UDim2.new(0.9, 0, 0, maxHeight) -- 90% da largura
     MINIMIZED_SIZE = UDim2.new(0.4, 0, 0, 70)
     
     TITLE_HEIGHT = 50
-    BUTTON_HEIGHT = 65
-    ICON_SIZE = 45
+    BUTTON_HEIGHT = 62 -- Ligeiramente menor para caber mais botões
+    ICON_SIZE = 42
     FONT_TITLE = 24
     FONT_SCRIPTS = 26
-    FONT_BUTTON = 19
-    FONT_ICON = 26
+    FONT_BUTTON = 18 -- Reduzido para caber mais texto
+    FONT_ICON = 24
     PADDING = 15
     SCROLLBAR_SIZE = 8
     CORNER_RADIUS = 20
@@ -94,7 +94,7 @@ MainFrame.Size = MAXIMIZED_SIZE
 if isMobile then
     MainFrame.Position = UDim2.new(0.05, 0, 0.1, 0)
 else
-    MainFrame.Position = UDim2.new(0.5, -200, 0.5, -355)
+    MainFrame.Position = UDim2.new(0.5, -200, 0.5, -390) -- Ajustado para nova altura
 end
 MainFrame.BackgroundColor3 = Color3.fromRGB(255, 59, 48) -- Vermelho maçã
 MainFrame.BackgroundTransparency = 0.1
@@ -139,7 +139,7 @@ EmojiLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 -- Título
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Name = "Title"
-TitleLabel.Size = UDim2.new(1, isMobile and -140 or -120, 1, 0)
+TitleLabel.Size = UDim2.new(1, isMobile and -200 or -180, 1, 0) -- Reduzido para caber os botões
 TitleLabel.Position = UDim2.new(0, isMobile and 70 or 50, 0, 0)
 TitleLabel.BackgroundTransparency = 1
 TitleLabel.Text = "Apple Hub " .. (isMobile and "📱" or "🖥️")
@@ -148,11 +148,11 @@ TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- BOTÕES DE CONTROLE
+-- BOTÕES DE CONTROLE NA BARRA DE TÍTULO (lado direito)
 local ControlFrame = Instance.new("Frame")
 ControlFrame.Name = "Controls"
-ControlFrame.Size = UDim2.new(0, isMobile and 120 or 100, 0, TITLE_HEIGHT)
-ControlFrame.Position = UDim2.new(1, isMobile and -125 or -105, 0, 0)
+ControlFrame.Size = UDim2.new(0, isMobile and 140 or 120, 0, TITLE_HEIGHT)
+ControlFrame.Position = UDim2.new(1, isMobile and -145 or -125, 0, 0)
 ControlFrame.BackgroundTransparency = 1
 
 -- Botão minimizar/maximizar
@@ -214,13 +214,13 @@ ScriptsContainer.BackgroundTransparency = 1
 ScriptsContainer.BorderSizePixel = 0
 ScriptsContainer.ScrollBarThickness = SCROLLBAR_SIZE
 ScriptsContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, isMobile and 470 or 430)
+ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, isMobile and 520 or 480) -- Aumentado
 ScriptsContainer.ScrollingDirection = Enum.ScrollingDirection.Y
 ScriptsContainer.VerticalScrollBarInset = Enum.ScrollBarInset.Always
 
 -- Layout dos scripts
 local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Padding = UDim.new(0, isMobile and 12 or 10)
+UIListLayout.Padding = UDim.new(0, isMobile and 10 or 8) -- Reduzido para caber mais botões
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
@@ -240,7 +240,7 @@ local function createScriptButton(name, displayName, icon, iconColor, isPremium,
     local iconLabel = Instance.new("TextLabel")
     iconLabel.Name = "Icon"
     iconLabel.Size = UDim2.new(0, ICON_SIZE, 0, ICON_SIZE)
-    iconLabel.Position = UDim2.new(0, isMobile and 10 or 5, 0.5, -ICON_SIZE/2)
+    iconLabel.Position = UDim2.new(0, isMobile and 8 or 5, 0.5, -ICON_SIZE/2)
     iconLabel.BackgroundTransparency = 1
     iconLabel.Text = icon
     iconLabel.TextSize = FONT_ICON
@@ -250,8 +250,8 @@ local function createScriptButton(name, displayName, icon, iconColor, isPremium,
     
     local textLabel = Instance.new("TextLabel")
     textLabel.Name = "Label"
-    textLabel.Size = UDim2.new(1, -(ICON_SIZE + (isMobile and 15 or 10)), 1, 0)
-    textLabel.Position = UDim2.new(0, ICON_SIZE + (isMobile and 12 or 8), 0, 0)
+    textLabel.Size = UDim2.new(1, -(ICON_SIZE + (isMobile and 12 or 8)), 1, 0)
+    textLabel.Position = UDim2.new(0, ICON_SIZE + (isMobile and 10 or 6), 0, 0)
     textLabel.BackgroundTransparency = 1
     textLabel.Text = displayName
     textLabel.TextSize = FONT_BUTTON
@@ -264,18 +264,18 @@ local function createScriptButton(name, displayName, icon, iconColor, isPremium,
     if isPremium or isDanger then
         local badge = Instance.new("TextLabel")
         badge.Name = "Badge"
-        badge.Size = UDim2.new(0, isMobile and 30 or 25, 0, isMobile and 30 or 25)
-        badge.Position = UDim2.new(1, isMobile and -35 or -30, 0, isMobile and 5 or 5)
+        badge.Size = UDim2.new(0, isMobile and 28 or 24, 0, isMobile and 28 or 24)
+        badge.Position = UDim2.new(1, isMobile and -32 or -28, 0, isMobile and 4 or 4)
         badge.BackgroundColor3 = isPremium and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(178, 34, 34)
         badge.BackgroundTransparency = 0.2
         badge.Text = isPremium and "⚡" or "💀"
-        badge.TextSize = isMobile and 16 or 14
+        badge.TextSize = isMobile and 14 or 12
         badge.Font = Enum.Font.GothamBold
         badge.TextColor3 = isPremium and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
         badge.Parent = button
         
         local badgeCorner = Instance.new("UICorner")
-        badgeCorner.CornerRadius = UDim.new(0, isMobile and 15 or 12)
+        badgeCorner.CornerRadius = UDim.new(0, isMobile and 14 or 10)
         badgeCorner.Parent = badge
     end
     
@@ -337,6 +337,16 @@ local AdminSpamButton, AdminSpamIcon, AdminSpamLabel = createScriptButton(
     false
 )
 
+-- NOVO BOTÃO: Chilli Free Private Server
+local ChilliPrivateButton, ChilliPrivateIcon, ChilliPrivateLabel = createScriptButton(
+    "ChilliPrivate", 
+    "Chilli Private Server [OP]", 
+    "🔓", 
+    Color3.fromRGB(0, 200, 83), -- Verde
+    false,
+    false
+)
+
 -- Montagem da interface
 Shadow.Parent = MainFrame
 MainFrame.Parent = ScreenGui
@@ -358,6 +368,7 @@ UCTButton.Parent = ScriptsContainer
 KurdButton.Parent = ScriptsContainer
 LagAuraButton.Parent = ScriptsContainer
 AdminSpamButton.Parent = ScriptsContainer
+ChilliPrivateButton.Parent = ScriptsContainer
 
 -- Variáveis de estado
 local isDragging = false
@@ -583,6 +594,11 @@ executeScriptFunction(AdminSpamButton, AdminSpamIcon, AdminSpamLabel, "👑", "A
     loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/fc9523e876bada3b7ed4ebe004cb8cf9.lua"))()
 end)
 
+-- NOVO: Chilli Free Private Server
+executeScriptFunction(ChilliPrivateButton, ChilliPrivateIcon, ChilliPrivateLabel, "🔓", "Chilli Private Server [OP]", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/PrivateServer"))()
+end)
+
 -- Efeitos hover (apenas para PC)
 if not isMobile then
     local function setupHoverEffects(button, icon, label, originalIcon)
@@ -623,6 +639,7 @@ if not isMobile then
     setupHoverEffects(KurdButton, KurdIcon, KurdLabel, "🏔️")
     setupHoverEffects(LagAuraButton, LagAuraIcon, LagAuraLabel, "💀")
     setupHoverEffects(AdminSpamButton, AdminSpamIcon, AdminSpamLabel, "👑")
+    setupHoverEffects(ChilliPrivateButton, ChilliPrivateIcon, ChilliPrivateLabel, "🔓")
 end
 
 -- Animação contínua do emoji
@@ -646,13 +663,14 @@ end
 print("🍎 Apple Hub carregado com sucesso!")
 print("📱 Dispositivo: " .. (isMobile and "MOBILE 📱" or "PC 🖥️"))
 print("📏 Tamanho do hub: " .. math.floor(MainFrame.AbsoluteSize.X) .. "x" .. math.floor(MainFrame.AbsoluteSize.Y))
-print("📜 Scripts disponíveis (6 total):")
+print("📜 Scripts disponíveis (7 total):")
 print("1. 👑 Nameless Hub [OP]")
 print("2. 🌶️ Chilli Hub [OP]")
 print("3. ⚡ UCT HUB [OP]")
 print("4. 🏔️ Kurd Hub [OP]")
 print("5. 💀 Lag+Aura [OP]")
 print("6. 👑 Admin Panel Spam [OP+]")
+print("7. 🔓 Chilli Private Server [OP]")
 
 -- Adiciona borda arredondada
 local Corner = Instance.new("UICorner")
@@ -669,7 +687,7 @@ ButtonCorner.CornerRadius = UDim.new(0, BUTTON_CORNER)
 
 for _, button in pairs({
     NamelessButton, ChilliButton, UCTButton, 
-    KurdButton, LagAuraButton, AdminSpamButton,
+    KurdButton, LagAuraButton, AdminSpamButton, ChilliPrivateButton,
     ToggleSizeButton, CloseButton
 }) do
     local corner = ButtonCorner:Clone()
@@ -701,7 +719,7 @@ if not isMobile then
     
     for _, button in pairs({
         NamelessButton, ChilliButton, UCTButton, 
-        KurdButton, LagAuraButton, AdminSpamButton
+        KurdButton, LagAuraButton, AdminSpamButton, ChilliPrivateButton
     }) do
         addButtonEffect(button)
     end
@@ -721,7 +739,7 @@ if isMobile then
     
     for _, button in pairs({
         NamelessButton, ChilliButton, UCTButton, 
-        KurdButton, LagAuraButton, AdminSpamButton,
+        KurdButton, LagAuraButton, AdminSpamButton, ChilliPrivateButton,
         ToggleSizeButton, CloseButton
     }) do
         addMobileTapEffect(button)
@@ -735,4 +753,4 @@ ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSiz
 -- Feedback visual de carregamento
 print("✅ Interface carregada com sucesso!")
 print("🎯 Modo: " .. (isMobile and "Touch/Tap" or "Mouse Click"))
-print("🔧 Botões de controle: ✅ Minimizar e Fechar funcionais")
+print("🔧 Botões de controle: ✅ Minimizar e Fechar na barra de título")
