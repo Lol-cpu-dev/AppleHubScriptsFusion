@@ -8,7 +8,7 @@ local RunService = game:GetService("RunService")
 -- Configurações
 local DRAG_SPEED = 0.25
 local EMOJI_ANIMATION_SPEED = 2
-local MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 500)
+local MAXIMIZED_SIZE = UDim2.new(0, 400, 0, 560)
 local MINIMIZED_SIZE = UDim2.new(0, 200, 0, 60)
 
 -- Cria a interface principal
@@ -30,7 +30,7 @@ end
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "AppleFrame"
 MainFrame.Size = MAXIMIZED_SIZE
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -250)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -280)
 MainFrame.BackgroundColor3 = Color3.fromRGB(255, 59, 48) -- Vermelho maçã
 MainFrame.BackgroundTransparency = 0.1
 MainFrame.BorderSizePixel = 0
@@ -140,7 +140,7 @@ ScriptsContainer.BackgroundTransparency = 1
 ScriptsContainer.BorderSizePixel = 0
 ScriptsContainer.ScrollBarThickness = 5
 ScriptsContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 150)
+ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, 220)
 
 -- Layout dos scripts
 local UIListLayout = Instance.new("UIListLayout")
@@ -209,6 +209,37 @@ ChilliIcon.TextSize = 24
 ChilliIcon.Font = Enum.Font.GothamBold
 ChilliIcon.TextColor3 = Color3.fromRGB(255, 69, 58)
 
+-- Botão UCT HUB (NOVO)
+local UCTButton = Instance.new("TextButton")
+UCTButton.Name = "UCTHub"
+UCTButton.Size = UDim2.new(1, 0, 0, 60)
+UCTButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+UCTButton.BackgroundTransparency = 0.3
+UCTButton.Text = ""
+UCTButton.AutoButtonColor = false
+UCTButton.BorderSizePixel = 0
+
+local UCTLabel = Instance.new("TextLabel")
+UCTLabel.Name = "Label"
+UCTLabel.Size = UDim2.new(1, -60, 1, 0)
+UCTLabel.Position = UDim2.new(0, 50, 0, 0)
+UCTLabel.BackgroundTransparency = 1
+UCTLabel.Text = "UCT HUB [OP]"
+UCTLabel.TextSize = 18
+UCTLabel.Font = Enum.Font.GothamBold
+UCTLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+UCTLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local UCTIcon = Instance.new("TextLabel")
+UCTIcon.Name = "Icon"
+UCTIcon.Size = UDim2.new(0, 40, 0, 40)
+UCTIcon.Position = UDim2.new(0, 5, 0.5, -20)
+UCTIcon.BackgroundTransparency = 1
+UCTIcon.Text = "⚡"
+UCTIcon.TextSize = 24
+UCTIcon.Font = Enum.Font.GothamBold
+UCTIcon.TextColor3 = Color3.fromRGB(0, 191, 255)
+
 -- Montagem da interface
 Shadow.Parent = MainFrame
 MainFrame.Parent = ScreenGui
@@ -230,6 +261,10 @@ NamelessIcon.Parent = NamelessButton
 ChilliButton.Parent = ScriptsContainer
 ChilliLabel.Parent = ChilliButton
 ChilliIcon.Parent = ChilliButton
+
+UCTButton.Parent = ScriptsContainer
+UCTLabel.Parent = UCTButton
+UCTIcon.Parent = UCTButton
 
 -- Variáveis de estado
 local isDragging = false
@@ -382,6 +417,35 @@ ChilliButton.MouseButton1Click:Connect(function()
     ChilliLabel.Text = "Chilli Hub [OP]"
 end)
 
+-- Função do UCT HUB (NOVO)
+UCTButton.MouseButton1Click:Connect(function()
+    animateClick(UCTButton)
+    
+    -- Efeito visual de execução
+    UCTIcon.Text = "⏳"
+    UCTLabel.Text = "Executando..."
+    
+    task.wait(0.5)
+    
+    -- Executar o script
+    local success, error = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/UCT-hub/main/refs/heads/main/stealabrainrot"))()
+    end)
+    
+    if success then
+        UCTIcon.Text = "✅"
+        UCTLabel.Text = "UCT HUB [EXECUTADO]"
+    else
+        UCTIcon.Text = "❌"
+        UCTLabel.Text = "UCT HUB [ERRO]"
+        warn("Erro ao executar UCT HUB:", error)
+    end
+    
+    task.wait(1)
+    UCTIcon.Text = "⚡"
+    UCTLabel.Text = "UCT HUB [OP]"
+end)
+
 -- Efeitos hover
 local function setupHoverEffects(button, icon, label, originalText, originalIcon)
     button.MouseEnter:Connect(function()
@@ -397,6 +461,7 @@ end
 
 setupHoverEffects(NamelessButton, NamelessIcon, NamelessLabel, "Nameless Hub [OP]", "👑")
 setupHoverEffects(ChilliButton, ChilliIcon, ChilliLabel, "Chilli Hub [OP]", "🌶️")
+setupHoverEffects(UCTButton, UCTIcon, UCTLabel, "UCT HUB [OP]", "⚡")
 
 -- Animação contínua do emoji
 RunService.RenderStepped:Connect(animateEmoji)
@@ -406,6 +471,7 @@ print("Apple Hub carregado com sucesso!")
 print("Scripts disponíveis:")
 print("1. Nameless Hub [OP]")
 print("2. Chilli Hub [OP]")
+print("3. UCT HUB [OP]")
 
 -- Adiciona borda arredondada (simulada)
 local Corner = Instance.new("UICorner")
@@ -416,7 +482,12 @@ local ButtonCorner = Instance.new("UICorner")
 ButtonCorner.CornerRadius = UDim.new(0, 10)
 ButtonCorner.Parent = NamelessButton
 ButtonCorner:Clone().Parent = ChilliButton
+ButtonCorner:Clone().Parent = UCTButton
 
 local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 15)
 TitleCorner.Parent = TitleFrame
+
+-- Ajusta o tamanho do canvas para os 3 botões
+task.wait(0.1)
+ScriptsContainer.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y)
