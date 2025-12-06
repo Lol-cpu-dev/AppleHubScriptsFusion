@@ -1,35 +1,33 @@
--- Apple Hub Profissional
--- Estilo limpo e funcional
+-- 🍎 Apple Hub - Versão Completa Otimizada
+-- 🚀 Drag 100% funcional + Todos scripts + Design limpo
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
-local GuiService = game:GetService("GuiService")
 
--- Detectar dispositivo
-local isMobile = UserInputService.TouchEnabled
+-- Configurações
 local player = Players.LocalPlayer
+local isMobile = UserInputService.TouchEnabled
 local screenSize = workspace.CurrentCamera.ViewportSize
 
 -- Tamanhos responsivos
-local MAXIMIZED_SIZE = isMobile and UDim2.new(0.9, 0, 0, 450) or UDim2.new(0, 400, 0, 500)
-local MINIMIZED_SIZE = isMobile and UDim2.new(0, 150, 0, 40) or UDim2.new(0, 150, 0, 40)
+local frameWidth = isMobile and screenSize.X * 0.9 or 420
+local frameHeight = 550
+local minimizedHeight = 45
 
--- Cria a interface
+-- GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "AppleHub"
+ScreenGui.Name = "AppleHubPro"
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.ResetOnSpawn = false
 
--- Proteger GUI
-if gethui then
-    ScreenGui.Parent = gethui()
-elseif syn and syn.protect_gui then
+-- Proteção
+if syn and syn.protect_gui then
     syn.protect_gui(ScreenGui)
-    ScreenGui.Parent = game:GetService("CoreGui")
-elseif game:GetService("CoreGui"):FindFirstChild("RobloxGui") then
-    ScreenGui.Parent = game:GetService("CoreGui")
+    ScreenGui.Parent = game.CoreGui
+elseif gethui then
+    ScreenGui.Parent = gethui()
 else
     ScreenGui.Parent = player:WaitForChild("PlayerGui")
 end
@@ -37,73 +35,70 @@ end
 -- Frame principal
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = MAXIMIZED_SIZE
-MainFrame.Position = UDim2.new(0.5, -200, 1.3, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+MainFrame.Size = UDim2.new(0, frameWidth, 0, frameHeight)
+MainFrame.Position = UDim2.new(0.5, -frameWidth/2, 0.5, -frameHeight/2)
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
 
--- Borda sutil
+-- Estilização
 local Border = Instance.new("UIStroke")
-Border.Color = Color3.fromRGB(60, 60, 65)
-Border.Thickness = 2
+Border.Color = Color3.fromRGB(50, 50, 50)
+Border.Thickness = 1
 Border.Parent = MainFrame
 
--- Barra de título
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 12)
+Corner.Parent = MainFrame
+
+-- Barra de título (ÁREA DO DRAG)
 local TitleBar = Instance.new("Frame")
 TitleBar.Name = "TitleBar"
-TitleBar.Size = UDim2.new(1, 0, 0, 40)
-TitleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+TitleBar.Size = UDim2.new(1, 0, 0, 45)
+TitleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 TitleBar.BorderSizePixel = 0
+
+-- Botões de controle
+local ControlFrame = Instance.new("Frame")
+ControlFrame.Size = UDim2.new(0, 70, 1, 0)
+ControlFrame.Position = UDim2.new(1, -75, 0, 0)
+ControlFrame.BackgroundTransparency = 1
+
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
+MinimizeButton.Position = UDim2.new(0, 5, 0.5, -15)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(255, 193, 7)
+MinimizeButton.Text = "─"
+MinimizeButton.TextColor3 = Color3.new(0, 0, 0)
+MinimizeButton.TextSize = 16
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(0, 40, 0.5, -15)
+CloseButton.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
+CloseButton.Text = "✕"
+CloseButton.TextColor3 = Color3.new(1, 1, 1)
+CloseButton.TextSize = 16
 
 -- Título
 local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Name = "Title"
-TitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
-TitleLabel.Position = UDim2.new(0.15, 0, 0, 0)
+TitleLabel.Size = UDim2.new(1, -80, 1, 0)
+TitleLabel.Position = UDim2.new(0, 10, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "🍎 Apple Hub"
-TitleLabel.TextSize = 20
+TitleLabel.Text = "🍎 APPLE HUB"
+TitleLabel.TextColor3 = Color3.new(1, 1, 1)
+TitleLabel.TextSize = 18
 TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.TextXAlignment = Enum.TextXAlignment.Center
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Botão minimizar
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Name = "MinimizeButton"
-MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
-MinimizeButton.Position = UDim2.new(1, -70, 0, 5)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(80, 80, 85)
-MinimizeButton.BorderSizePixel = 0
-MinimizeButton.Text = "─"
-MinimizeButton.TextSize = 18
-MinimizeButton.Font = Enum.Font.GothamBold
-MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-
--- Botão fechar
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(1, -35, 0, 5)
-CloseButton.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
-CloseButton.BorderSizePixel = 0
-CloseButton.Text = "✕"
-CloseButton.TextSize = 18
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-
--- Container dos scripts
+-- Área de scripts
 local ScriptsFrame = Instance.new("ScrollingFrame")
-ScriptsFrame.Name = "ScriptsFrame"
-ScriptsFrame.Size = UDim2.new(1, -20, 1, -60)
-ScriptsFrame.Position = UDim2.new(0, 10, 0, 50)
+ScriptsFrame.Size = UDim2.new(1, -20, 1, -65)
+ScriptsFrame.Position = UDim2.new(0, 10, 0, 55)
 ScriptsFrame.BackgroundTransparency = 1
-ScriptsFrame.BorderSizePixel = 0
-ScriptsFrame.ScrollBarThickness = 5
-ScriptsFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 105)
-ScriptsFrame.CanvasSize = UDim2.new(0, 0, 0, 450)
+ScriptsFrame.ScrollBarThickness = 4
+ScriptsFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
 
--- Layout
 local UIListLayout = Instance.new("UIListLayout")
 UIListLayout.Padding = UDim.new(0, 10)
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -112,194 +107,93 @@ UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 -- Montar interface
 MainFrame.Parent = ScreenGui
 TitleBar.Parent = MainFrame
+ControlFrame.Parent = TitleBar
+MinimizeButton.Parent = ControlFrame
+CloseButton.Parent = ControlFrame
 TitleLabel.Parent = TitleBar
-MinimizeButton.Parent = TitleBar
-CloseButton.Parent = TitleBar
 ScriptsFrame.Parent = MainFrame
 UIListLayout.Parent = ScriptsFrame
 
--- Criar botões de script
-local function createScriptButton(name, displayName, icon, color)
+-- Lista de scripts
+local scripts = {
+    {name = "Nameless", icon = "👑", color = Color3.fromRGB(255, 215, 0), url = "https://raw.githubusercontent.com/ily123950/Vulkan/main/Tr"},
+    {name = "Chilli Hub", icon = "🌶️", color = Color3.fromRGB(255, 69, 58), url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
+    {name = "UCT Hub", icon = "⚡", color = Color3.fromRGB(0, 191, 255), url = "https://raw.githubusercontent.com/UCT-hub/main/main/stealabrainrot"},
+    {name = "Kurd Hub", icon = "🏔️", color = Color3.fromRGB(34, 139, 34), url = "https://raw.githubusercontent.com/Ninja10908/S4/main/Kurdhub"},
+    {name = "Lag + Aura", icon = "💀", color = Color3.fromRGB(178, 34, 34), url = "https://tcscripts.discloud.app/scripts/serverdestroyerv6"},
+    {name = "Admin Spam", icon = "👑", color = Color3.fromRGB(255, 215, 0), url = "https://api.luarmor.net/files/v3/loaders/fc9523e876bada3b7ed4ebe004cb8cf9.lua"},
+    {name = "Chilli Private", icon = "🔓", color = Color3.fromRGB(0, 200, 83), url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/PrivateServer"},
+    {name = "Speed Steal", icon = "⚡", color = Color3.fromRGB(0, 150, 255), url = "https://pastebin.com/raw/rmxfZDPd"}
+}
+
+-- Criar botões
+for _, scriptData in ipairs(scripts) do
     local button = Instance.new("TextButton")
-    button.Name = name
-    button.Size = UDim2.new(0.95, 0, 0, 55)
-    button.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+    button.Size = UDim2.new(0.95, 0, 0, 60)
+    button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     button.BorderSizePixel = 0
     button.Text = ""
     button.AutoButtonColor = false
     
-    local iconLabel = Instance.new("TextLabel")
-    iconLabel.Name = "Icon"
-    iconLabel.Size = UDim2.new(0, 35, 0, 35)
-    iconLabel.Position = UDim2.new(0, 10, 0.5, -17.5)
-    iconLabel.BackgroundTransparency = 1
-    iconLabel.Text = icon
-    iconLabel.TextSize = 22
-    iconLabel.Font = Enum.Font.GothamBold
-    iconLabel.TextColor3 = color
-    iconLabel.Parent = button
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = button
     
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Name = "Label"
-    textLabel.Size = UDim2.new(1, -55, 1, 0)
-    textLabel.Position = UDim2.new(0, 50, 0, 0)
-    textLabel.BackgroundTransparency = 1
-    textLabel.Text = displayName
-    textLabel.TextSize = 18
-    textLabel.Font = Enum.Font.GothamBold
-    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    textLabel.TextXAlignment = Enum.TextXAlignment.Left
-    textLabel.Parent = button
+    -- Ícone
+    local icon = Instance.new("TextLabel")
+    icon.Size = UDim2.new(0, 40, 0, 40)
+    icon.Position = UDim2.new(0, 10, 0.5, -20)
+    icon.BackgroundTransparency = 1
+    icon.Text = scriptData.icon
+    icon.TextSize = 24
+    icon.TextColor3 = scriptData.color
+    icon.Font = Enum.Font.GothamBold
+    icon.Parent = button
     
-    local buttonCorner = Instance.new("UICorner")
-    buttonCorner.CornerRadius = UDim.new(0, 8)
-    buttonCorner.Parent = button
+    -- Nome
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -60, 1, 0)
+    label.Position = UDim2.new(0, 60, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = scriptData.name
+    label.TextSize = 16
+    label.TextColor3 = Color3.new(1, 1, 1)
+    label.Font = Enum.Font.GothamBold
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = button
     
-    return button, iconLabel, textLabel
-end
-
--- Criar todos os botões
-local NamelessButton, NamelessIcon, NamelessLabel = createScriptButton(
-    "Nameless", "Nameless Hub [OP]", "👑", Color3.fromRGB(255, 215, 0))
-
-local ChilliButton, ChilliIcon, ChilliLabel = createScriptButton(
-    "Chilli", "Chilli Hub [OP]", "🌶️", Color3.fromRGB(255, 69, 58))
-
-local UCTButton, UCTIcon, UCTLabel = createScriptButton(
-    "UCT", "UCT HUB [OP]", "⚡", Color3.fromRGB(0, 191, 255))
-
-local KurdButton, KurdIcon, KurdLabel = createScriptButton(
-    "Kurd", "Kurd Hub [OP]", "🏔️", Color3.fromRGB(34, 139, 34))
-
-local LagAuraButton, LagAuraIcon, LagAuraLabel = createScriptButton(
-    "LagAura", "Lag+Aura [OP]", "💀", Color3.fromRGB(178, 34, 34))
-
-local AdminSpamButton, AdminSpamIcon, AdminSpamLabel = createScriptButton(
-    "AdminSpam", "Admin Panel Spam [OP+]", "👑", Color3.fromRGB(255, 215, 0))
-
-local ChilliPrivateButton, ChilliPrivateIcon, ChilliPrivateLabel = createScriptButton(
-    "ChilliPrivate", "Chilli Private Server [OP]", "🔓", Color3.fromRGB(0, 200, 83))
-
-local SpeedStealButton, SpeedStealIcon, SpeedStealLabel = createScriptButton(
-    "SpeedSteal", "Speed Steal Boost [OP]", "⚡", Color3.fromRGB(0, 150, 255))
-
--- Adicionar botões
-NamelessButton.Parent = ScriptsFrame
-ChilliButton.Parent = ScriptsFrame
-UCTButton.Parent = ScriptsFrame
-KurdButton.Parent = ScriptsFrame
-LagAuraButton.Parent = ScriptsFrame
-AdminSpamButton.Parent = ScriptsFrame
-ChilliPrivateButton.Parent = ScriptsFrame
-SpeedStealButton.Parent = ScriptsFrame
-
--- ANIMAÇÃO DE ENTRADA
-MainFrame.BackgroundTransparency = 1
-task.wait(0.1)
-
-for i = 1, 20 do
-    MainFrame.BackgroundTransparency = 1 - (i/20)
-    task.wait(0.01)
-end
-
-MainFrame:TweenPosition(
-    UDim2.new(0.5, -200, 0.5, -250),
-    "Out",
-    "Quad",
-    0.3,
-    true
-)
-
--- FECHAR & MINIMIZAR
-local minimized = false
-
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
-
-MinimizeButton.MouseButton1Click:Connect(function()
-    minimized = not minimized
-
-    if minimized then
-        MainFrame:TweenSize(MINIMIZED_SIZE, "Out", "Quad", 0.3, true)
-        ScriptsFrame.Visible = false
-        MinimizeButton.Text = "+"
-    else
-        MainFrame:TweenSize(MAXIMIZED_SIZE, "Out", "Quad", 0.3, true)
-        ScriptsFrame.Visible = true
-        MinimizeButton.Text = "─"
-    end
-end)
-
--- DRAG LIVRE
-local dragging = false
-local dragStart, startPos
-
-local function update(input)
-    if dragging then
-        local delta = input.Position - dragStart
-        MainFrame.Position = UDim2.new(
-            0,
-            startPos.X.Offset + delta.X,
-            0,
-            startPos.Y.Offset + delta.Y
-        )
-    end
-end
-
-MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = MainFrame.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
+    -- Efeito hover
+    if not isMobile then
+        button.MouseEnter:Connect(function()
+            button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         end)
-    end
-end)
-
-MainFrame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        UserInputService.InputChanged:Connect(function(changed)
-            if changed == input then
-                update(changed)
-            end
-        end)
-    end
-end)
-
--- Sistema para mobile
-if isMobile then
-    TitleBar.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = MainFrame.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-end
-
--- FUNÇÃO PARA EXECUTAR SCRIPTS
-local function executeScript(button, icon, label, originalText, scriptFunc)
-    local function onClick()
-        -- Animação de clique
-        button.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
-        task.wait(0.1)
-        button.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
         
+        button.MouseLeave:Connect(function()
+            button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        end)
+    end
+    
+    -- Executar script
+    button.MouseButton1Click:Connect(function()
+        -- Animação de clique
+        local originalColor = button.BackgroundColor3
+        local originalIcon = icon.Text
+        local originalText = label.Text
+        
+        button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
         icon.Text = "⏳"
         label.Text = "Executando..."
         
-        task.wait(0.5)
+        task.wait(0.2)
+        button.BackgroundColor3 = originalColor
         
-        local success, error = pcall(scriptFunc)
+        -- Executar
+        local success, err = pcall(function()
+            if scriptData.name == "Lag + Aura" then
+                getgenv().ServerDestroyerV6 = {Comprar = false, Spam = true}
+            end
+            loadstring(game:HttpGet(scriptData.url))()
+        end)
         
         if success then
             icon.Text = "✅"
@@ -307,96 +201,141 @@ local function executeScript(button, icon, label, originalText, scriptFunc)
         else
             icon.Text = "❌"
             label.Text = "Erro!"
-            warn("Erro ao executar:", error)
+            warn("Erro:", err)
         end
         
-        task.wait(1)
+        task.wait(1.5)
+        icon.Text = originalIcon
         label.Text = originalText
-        
-        -- Restaurar ícone original
-        if button.Name == "Nameless" then icon.Text = "👑"
-        elseif button.Name == "Chilli" then icon.Text = "🌶️"
-        elseif button.Name == "UCT" then icon.Text = "⚡"
-        elseif button.Name == "Kurd" then icon.Text = "🏔️"
-        elseif button.Name == "LagAura" then icon.Text = "💀"
-        elseif button.Name == "AdminSpam" then icon.Text = "👑"
-        elseif button.Name == "ChilliPrivate" then icon.Text = "🔓"
-        elseif button.Name == "SpeedSteal" then icon.Text = "⚡" end
-    end
+    end)
     
-    -- PC
-    button.MouseButton1Click:Connect(onClick)
-    
-    -- Mobile
     if isMobile then
-        button.TouchTap:Connect(onClick)
-    end
-end
-
--- CONFIGURAR TODOS OS SCRIPTS
-executeScript(NamelessButton, NamelessIcon, NamelessLabel, "Nameless Hub [OP]", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ily123950/Vulkan/refs/heads/main/Tr"))()
-end)
-
-executeScript(ChilliButton, ChilliIcon, ChilliLabel, "Chilli Hub [OP]", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
-end)
-
-executeScript(UCTButton, UCTIcon, UCTLabel, "UCT HUB [OP]", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/UCT-hub/main/refs/heads/main/stealabrainrot"))()
-end)
-
-executeScript(KurdButton, KurdIcon, KurdLabel, "Kurd Hub [OP]", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Ninja10908/S4/refs/heads/main/Kurdhub"))()
-end)
-
-executeScript(LagAuraButton, LagAuraIcon, LagAuraLabel, "Lag+Aura [OP]", function()
-    getgenv().ServerDestroyerV6 = {
-        Comprar = false,
-        Spam = true
-    }
-    loadstring(game:HttpGet("https://tcscripts.discloud.app/scripts/serverdestroyerv6"))()
-end)
-
-executeScript(AdminSpamButton, AdminSpamIcon, AdminSpamLabel, "Admin Panel Spam [OP+]", function()
-    loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/fc9523e876bada3b7ed4ebe004cb8cf9.lua"))()
-end)
-
-executeScript(ChilliPrivateButton, ChilliPrivateIcon, ChilliPrivateLabel, "Chilli Private Server [OP]", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/PrivateServer"))()
-end)
-
-executeScript(SpeedStealButton, SpeedStealIcon, SpeedStealLabel, "Speed Steal Boost [OP]", function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/rmxfZDPd"))()
-end)
-
--- Efeitos hover (PC apenas)
-if not isMobile then
-    local function setupHover(button)
-        button.MouseEnter:Connect(function()
-            button.BackgroundColor3 = Color3.fromRGB(55, 55, 60)
-        end)
-        
-        button.MouseLeave:Connect(function()
-            button.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+        button.TouchTap:Connect(function()
+            button.MouseButton1Click:Fire()
         end)
     end
     
-    for _, button in pairs({
-        NamelessButton, ChilliButton, UCTButton, KurdButton,
-        LagAuraButton, AdminSpamButton, ChilliPrivateButton, SpeedStealButton
-    }) do
-        setupHover(button)
-    end
+    button.Parent = ScriptsFrame
 end
 
--- Ajustar canvas size
-UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    ScriptsFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 20)
+-- 🔥 SISTEMA DE DRAG SIMPLES E FUNCIONAL
+local dragging = false
+local dragStart, frameStart
+
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+       (isMobile and input.UserInputType == Enum.UserInputType.Touch) then
+        dragging = true
+        dragStart = input.Position
+        frameStart = MainFrame.Position
+        
+        local connection
+        connection = input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+                connection:Disconnect()
+            end
+        end)
+    end
 end)
 
--- Console message
-print("🍎 Apple Hub carregado com sucesso!")
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or 
+       input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(
+            frameStart.X.Scale,
+            frameStart.X.Offset + delta.X,
+            frameStart.Y.Scale,
+            frameStart.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- Minimizar/Fechar
+local minimized = false
+
+MinimizeButton.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    
+    if minimized then
+        MainFrame:TweenSize(UDim2.new(0, frameWidth, 0, minimizedHeight), "Out", "Quad", 0.2)
+        ScriptsFrame.Visible = false
+        MinimizeButton.Text = "+"
+    else
+        MainFrame:TweenSize(UDim2.new(0, frameWidth, 0, frameHeight), "Out", "Quad", 0.2)
+        ScriptsFrame.Visible = true
+        MinimizeButton.Text = "─"
+    end
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- Ajustar tamanho do canvas
+UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    ScriptsFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
+end)
+
+-- Animações de entrada
+MainFrame.BackgroundTransparency = 1
+TitleBar.BackgroundTransparency = 1
+
+for i = 1, 20 do
+    MainFrame.BackgroundTransparency = 1 - (i/20)
+    TitleBar.BackgroundTransparency = 1 - (i/20)
+    task.wait(0.01)
+end
+
+-- Feedback inicial
+print("==================================")
+print("🍎 APPLE HUB - Carregado!")
 print("📱 Dispositivo: " .. (isMobile and "Mobile" or "PC"))
-print("📜 Scripts disponíveis: 8")
-print("🎯 Estilo: Profissional limpo")
+print("🖱️  Arraste pela barra preta")
+print("🎯 Scripts: " .. #scripts .. " disponíveis")
+print("==================================")
+
+-- Indicador visual do drag (remove após 3s)
+local dragHint = Instance.new("TextLabel")
+dragHint.Size = UDim2.new(1, 0, 0, 20)
+dragHint.Position = UDim2.new(0, 0, 1, 5)
+dragHint.BackgroundTransparency = 1
+dragHint.Text = "🖱️ Arraste-me pela barra superior"
+dragHint.TextColor3 = Color3.fromRGB(100, 100, 100)
+dragHint.TextSize = 12
+dragHint.Font = Enum.Font.Gotham
+dragHint.TextXAlignment = Enum.TextXAlignment.Center
+dragHint.Parent = MainFrame
+
+task.wait(3)
+dragHint:Destroy()
+
+-- Sistema de notificações rápidas
+local function notify(message, color)
+    local notif = Instance.new("TextLabel")
+    notif.Size = UDim2.new(1, -20, 0, 35)
+    notif.Position = UDim2.new(0, 10, 0, -40)
+    notif.BackgroundColor3 = color
+    notif.TextColor3 = Color3.new(1, 1, 1)
+    notif.Text = message
+    notif.TextSize = 14
+    notif.Font = Enum.Font.GothamBold
+    notif.TextXAlignment = Enum.TextXAlignment.Center
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = notif
+    
+    notif.Parent = MainFrame
+    
+    notif:TweenPosition(UDim2.new(0, 10, 0, 10), "Out", "Quad", 0.3)
+    task.wait(2)
+    notif:TweenPosition(UDim2.new(0, 10, 0, -40), "Out", "Quad", 0.3)
+    task.wait(0.3)
+    notif:Destroy()
+end
+
+-- Notificação de boas-vindas
+task.wait(0.5)
+notify("🍎 Apple Hub Pronto!", Color3.fromRGB(0, 150, 255))
