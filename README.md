@@ -1,26 +1,34 @@
--- 🍎 Apple Hub - Versão Completa Otimizada
--- 🚀 Drag 100% funcional + Todos scripts + Design limpo
+-- 🍎 Apple Hub - Versão Completa Mobile/Pc
+-- 🚀 Drag 100% + Mobile otimizado + Ping Pong
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
 
--- Configurações
+-- Detectar dispositivo
 local player = Players.LocalPlayer
 local isMobile = UserInputService.TouchEnabled
 local screenSize = workspace.CurrentCamera.ViewportSize
 
--- Tamanhos responsivos
-local frameWidth = isMobile and screenSize.X * 0.9 or 420
-local frameHeight = 550
+-- 🔧 CONFIGURAÇÕES ESPECÍFICAS PARA MOBILE
+local mobileScale = 0.85  -- Reduzido para não cobrir tela toda
+local pcWidth = 420
+local mobileWidth = screenSize.X * mobileScale
+local frameWidth = isMobile and mobileWidth or pcWidth
+local frameHeight = isMobile and 500 or 550  -- Menor no mobile
 local minimizedHeight = 45
 
 -- GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "AppleHubPro"
+ScreenGui.Name = "AppleHubMobile"
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.ResetOnSpawn = false
+ScreenGui.DisplayOrder = 999
+
+-- Posição inicial (mais alta no mobile para não cobrir tudo)
+local startPosition = isMobile and 
+    UDim2.new(0.5, -frameWidth/2, 0.3, -frameHeight/2) or  -- Mais alto no mobile
+    UDim2.new(0.5, -frameWidth/2, 0.5, -frameHeight/2)      -- Central no PC
 
 -- Proteção
 if syn and syn.protect_gui then
@@ -29,88 +37,111 @@ if syn and syn.protect_gui then
 elseif gethui then
     ScreenGui.Parent = gethui()
 else
-    ScreenGui.Parent = player:WaitForChild("PlayerGui")
+    ScreenGui.Parent = game:GetService("CoreGui")
 end
 
 -- Frame principal
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, frameWidth, 0, frameHeight)
-MainFrame.Position = UDim2.new(0.5, -frameWidth/2, 0.5, -frameHeight/2)
-MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+MainFrame.Position = startPosition
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 
 -- Estilização
 local Border = Instance.new("UIStroke")
-Border.Color = Color3.fromRGB(50, 50, 50)
-Border.Thickness = 1
+Border.Color = Color3.fromRGB(60, 60, 70)
+Border.Thickness = 2
 Border.Parent = MainFrame
 
 local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0, 12)
+Corner.CornerRadius = UDim.new(0, 14)
 Corner.Parent = MainFrame
 
--- Barra de título (ÁREA DO DRAG)
+-- Barra de título
 local TitleBar = Instance.new("Frame")
 TitleBar.Name = "TitleBar"
-TitleBar.Size = UDim2.new(1, 0, 0, 45)
-TitleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TitleBar.Size = UDim2.new(1, 0, 0, 50)
+TitleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
 TitleBar.BorderSizePixel = 0
 
--- Botões de controle
-local ControlFrame = Instance.new("Frame")
-ControlFrame.Size = UDim2.new(0, 70, 1, 0)
-ControlFrame.Position = UDim2.new(1, -75, 0, 0)
-ControlFrame.BackgroundTransparency = 1
-
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
-MinimizeButton.Position = UDim2.new(0, 5, 0.5, -15)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(255, 193, 7)
-MinimizeButton.Text = "─"
-MinimizeButton.TextColor3 = Color3.new(0, 0, 0)
-MinimizeButton.TextSize = 16
-
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(0, 40, 0.5, -15)
-CloseButton.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
-CloseButton.Text = "✕"
-CloseButton.TextColor3 = Color3.new(1, 1, 1)
-CloseButton.TextSize = 16
+-- Ícone mobile/PC
+local DeviceIcon = Instance.new("TextLabel")
+DeviceIcon.Size = UDim2.new(0, 40, 1, 0)
+DeviceIcon.Position = UDim2.new(0, 10, 0, 0)
+DeviceIcon.BackgroundTransparency = 1
+DeviceIcon.Text = isMobile and "📱" or "💻"
+DeviceIcon.TextSize = 22
+DeviceIcon.TextColor3 = Color3.new(1, 1, 1)
+DeviceIcon.Font = Enum.Font.GothamBold
 
 -- Título
 local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(1, -80, 1, 0)
-TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+TitleLabel.Size = UDim2.new(1, -100, 1, 0)
+TitleLabel.Position = UDim2.new(0, 55, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "🍎 APPLE HUB"
+TitleLabel.Text = "APPLE HUB"
 TitleLabel.TextColor3 = Color3.new(1, 1, 1)
-TitleLabel.TextSize = 18
+TitleLabel.TextSize = isMobile and 18 or 20
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
+-- Botões de controle (maiores no mobile)
+local buttonSize = isMobile and 35 or 30
+local ControlFrame = Instance.new("Frame")
+ControlFrame.Size = UDim2.new(0, 80, 1, 0)
+ControlFrame.Position = UDim2.new(1, -85, 0, 0)
+ControlFrame.BackgroundTransparency = 1
+
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Size = UDim2.new(0, buttonSize, 0, buttonSize)
+MinimizeButton.Position = UDim2.new(0, 5, 0.5, -buttonSize/2)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(255, 193, 7)
+MinimizeButton.Text = "─"
+MinimizeButton.TextColor3 = Color3.new(0, 0, 0)
+MinimizeButton.TextSize = isMobile and 18 or 16
+MinimizeButton.Font = Enum.Font.GothamBold
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, buttonSize, 0, buttonSize)
+CloseButton.Position = UDim2.new(0, 45, 0.5, -buttonSize/2)
+CloseButton.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
+CloseButton.Text = "✕"
+CloseButton.Text = "✕"
+CloseButton.TextColor3 = Color3.new(1, 1, 1)
+CloseButton.TextSize = isMobile and 18 or 16
+CloseButton.Font = Enum.Font.GothamBold
+
+-- Arredondar botões
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 8)
+buttonCorner.Parent = MinimizeButton
+buttonCorner:Clone().Parent = CloseButton
+
 -- Área de scripts
 local ScriptsFrame = Instance.new("ScrollingFrame")
-ScriptsFrame.Size = UDim2.new(1, -20, 1, -65)
-ScriptsFrame.Position = UDim2.new(0, 10, 0, 55)
+ScriptsFrame.Size = UDim2.new(1, -20, 1, -70)
+ScriptsFrame.Position = UDim2.new(0, 10, 0, 60)
 ScriptsFrame.BackgroundTransparency = 1
-ScriptsFrame.ScrollBarThickness = 4
-ScriptsFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+ScriptsFrame.ScrollBarThickness = isMobile and 6 or 4
+ScriptsFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
+ScriptsFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
 local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Padding = UDim.new(0, 10)
+UIListLayout.Padding = UDim.new(0, isMobile and 12 or 10)
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
 -- Montar interface
 MainFrame.Parent = ScreenGui
 TitleBar.Parent = MainFrame
+DeviceIcon.Parent = TitleBar
+TitleLabel.Parent = TitleBar
 ControlFrame.Parent = TitleBar
 MinimizeButton.Parent = ControlFrame
 CloseButton.Parent = ControlFrame
-TitleLabel.Parent = TitleBar
 ScriptsFrame.Parent = MainFrame
 UIListLayout.Parent = ScriptsFrame
 
@@ -123,14 +154,17 @@ local scripts = {
     {name = "Lag + Aura", icon = "💀", color = Color3.fromRGB(178, 34, 34), url = "https://tcscripts.discloud.app/scripts/serverdestroyerv6"},
     {name = "Admin Spam", icon = "👑", color = Color3.fromRGB(255, 215, 0), url = "https://api.luarmor.net/files/v3/loaders/fc9523e876bada3b7ed4ebe004cb8cf9.lua"},
     {name = "Chilli Private", icon = "🔓", color = Color3.fromRGB(0, 200, 83), url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/PrivateServer"},
-    {name = "Speed Steal", icon = "⚡", color = Color3.fromRGB(0, 150, 255), url = "https://pastebin.com/raw/rmxfZDPd"}
+    {name = "Speed Steal", icon = "⚡", color = Color3.fromRGB(0, 150, 255), url = "https://pastebin.com/raw/rmxfZDPd"},
+    -- 🔥 NOVO SCRIPT ADICIONADO
+    {name = "Auto Ping Pong [KEY]", icon = "🏓", color = Color3.fromRGB(0, 230, 118), 
+     url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Auto%20buy%20-%20Ping%20Pong.lua"}
 }
 
 -- Criar botões
 for _, scriptData in ipairs(scripts) do
     local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0.95, 0, 0, 60)
-    button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    button.Size = UDim2.new(0.95, 0, 0, isMobile and 65 or 60)
+    button.BackgroundColor3 = Color3.fromRGB(40, 40, 46)
     button.BorderSizePixel = 0
     button.Text = ""
     button.AutoButtonColor = false
@@ -141,51 +175,87 @@ for _, scriptData in ipairs(scripts) do
     
     -- Ícone
     local icon = Instance.new("TextLabel")
-    icon.Size = UDim2.new(0, 40, 0, 40)
-    icon.Position = UDim2.new(0, 10, 0.5, -20)
+    icon.Size = UDim2.new(0, isMobile and 45 or 40, 0, isMobile and 45 or 40)
+    icon.Position = UDim2.new(0, 10, 0.5, -isMobile and 22.5 or 20)
     icon.BackgroundTransparency = 1
     icon.Text = scriptData.icon
-    icon.TextSize = 24
+    icon.TextSize = isMobile and 26 or 24
     icon.TextColor3 = scriptData.color
     icon.Font = Enum.Font.GothamBold
     icon.Parent = button
     
     -- Nome
     local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, -60, 1, 0)
-    label.Position = UDim2.new(0, 60, 0, 0)
+    label.Size = UDim2.new(1, -70, 1, 0)
+    label.Position = UDim2.new(0, isMobile and 65 or 60, 0, 0)
     label.BackgroundTransparency = 1
     label.Text = scriptData.name
-    label.TextSize = 16
+    label.TextSize = isMobile and 16 or 15
     label.TextColor3 = Color3.new(1, 1, 1)
     label.Font = Enum.Font.GothamBold
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Parent = button
     
-    -- Efeito hover
+    -- Indicador de necessidade de key
+    if scriptData.name:find("KEY") then
+        local keyBadge = Instance.new("Frame")
+        keyBadge.Size = UDim2.new(0, 25, 0, 15)
+        keyBadge.Position = UDim2.new(1, -30, 0.5, -7.5)
+        keyBadge.BackgroundColor3 = Color3.fromRGB(255, 152, 0)
+        keyBadge.BorderSizePixel = 0
+        
+        local keyCorner = Instance.new("UICorner")
+        keyCorner.CornerRadius = UDim.new(0, 4)
+        keyCorner.Parent = keyBadge
+        
+        local keyLabel = Instance.new("TextLabel")
+        keyLabel.Size = UDim2.new(1, 0, 1, 0)
+        keyLabel.BackgroundTransparency = 1
+        keyLabel.Text = "KEY"
+        keyLabel.TextSize = 10
+        keyLabel.TextColor3 = Color3.new(1, 1, 1)
+        keyLabel.Font = Enum.Font.GothamBold
+        keyLabel.Parent = keyBadge
+        
+        keyBadge.Parent = button
+    end
+    
+    -- Efeito hover (apenas PC)
     if not isMobile then
         button.MouseEnter:Connect(function()
-            button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            button.BackgroundColor3 = Color3.fromRGB(50, 50, 56)
         end)
         
         button.MouseLeave:Connect(function()
-            button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            button.BackgroundColor3 = Color3.fromRGB(40, 40, 46)
+        end)
+    else
+        -- Efeito de toque no mobile
+        button.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                button.BackgroundColor3 = Color3.fromRGB(50, 50, 56)
+            end
+        end)
+        
+        button.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                button.BackgroundColor3 = Color3.fromRGB(40, 40, 46)
+            end
         end)
     end
     
     -- Executar script
-    button.MouseButton1Click:Connect(function()
-        -- Animação de clique
+    local function executeScript()
         local originalColor = button.BackgroundColor3
         local originalIcon = icon.Text
         local originalText = label.Text
         
-        button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        -- Animação de clique
+        button.BackgroundColor3 = Color3.fromRGB(60, 60, 66)
         icon.Text = "⏳"
         label.Text = "Executando..."
         
         task.wait(0.2)
-        button.BackgroundColor3 = originalColor
         
         -- Executar
         local success, err = pcall(function()
@@ -195,30 +265,35 @@ for _, scriptData in ipairs(scripts) do
             loadstring(game:HttpGet(scriptData.url))()
         end)
         
+        -- Feedback
         if success then
+            button.BackgroundColor3 = Color3.fromRGB(40, 180, 70)
             icon.Text = "✅"
             label.Text = "Sucesso!"
         else
+            button.BackgroundColor3 = Color3.fromRGB(180, 40, 40)
             icon.Text = "❌"
             label.Text = "Erro!"
-            warn("Erro:", err)
+            warn("Erro em " .. scriptData.name .. ":", err)
         end
         
         task.wait(1.5)
+        button.BackgroundColor3 = originalColor
         icon.Text = originalIcon
         label.Text = originalText
-    end)
+    end
+    
+    -- Conectar eventos
+    button.MouseButton1Click:Connect(executeScript)
     
     if isMobile then
-        button.TouchTap:Connect(function()
-            button.MouseButton1Click:Fire()
-        end)
+        button.TouchTap:Connect(executeScript)
     end
     
     button.Parent = ScriptsFrame
 end
 
--- 🔥 SISTEMA DE DRAG SIMPLES E FUNCIONAL
+-- 🔥 SISTEMA DE DRAG SIMPLIFICADO (FUNCIONA EM MOBILE E PC)
 local dragging = false
 local dragStart, frameStart
 
@@ -229,13 +304,10 @@ TitleBar.InputBegan:Connect(function(input)
         dragStart = input.Position
         frameStart = MainFrame.Position
         
-        local connection
-        connection = input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-                connection:Disconnect()
-            end
-        end)
+        if isMobile then
+            -- Feedback visual no mobile
+            TitleBar.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+        end
     end
 end)
 
@@ -249,6 +321,16 @@ UserInputService.InputChanged:Connect(function(input)
             frameStart.Y.Scale,
             frameStart.Y.Offset + delta.Y
         )
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+       input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+        if isMobile then
+            TitleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+        end
     end
 end)
 
@@ -269,18 +351,27 @@ MinimizeButton.MouseButton1Click:Connect(function()
     end
 end)
 
+if isMobile then
+    MinimizeButton.TouchTap:Connect(function()
+        MinimizeButton.MouseButton1Click:Fire()
+    end)
+end
+
 CloseButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
 end)
 
--- Ajustar tamanho do canvas
-UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    ScriptsFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
-end)
+if isMobile then
+    CloseButton.TouchTap:Connect(function()
+        CloseButton.MouseButton1Click:Fire()
+    end)
+end
 
 -- Animações de entrada
 MainFrame.BackgroundTransparency = 1
 TitleBar.BackgroundTransparency = 1
+
+task.wait(0.1)
 
 for i = 1, 20 do
     MainFrame.BackgroundTransparency = 1 - (i/20)
@@ -289,36 +380,23 @@ for i = 1, 20 do
 end
 
 -- Feedback inicial
-print("==================================")
-print("🍎 APPLE HUB - Carregado!")
+print("════════════════════════════════")
+print("🍎 APPLE HUB - Mobile Optimized")
 print("📱 Dispositivo: " .. (isMobile and "Mobile" or "PC"))
-print("🖱️  Arraste pela barra preta")
+print("📏 Tamanho: " .. frameWidth .. "x" .. frameHeight)
 print("🎯 Scripts: " .. #scripts .. " disponíveis")
-print("==================================")
+print("🖱️  Arraste pela barra superior")
+print("════════════════════════════════")
 
--- Indicador visual do drag (remove após 3s)
-local dragHint = Instance.new("TextLabel")
-dragHint.Size = UDim2.new(1, 0, 0, 20)
-dragHint.Position = UDim2.new(0, 0, 1, 5)
-dragHint.BackgroundTransparency = 1
-dragHint.Text = "🖱️ Arraste-me pela barra superior"
-dragHint.TextColor3 = Color3.fromRGB(100, 100, 100)
-dragHint.TextSize = 12
-dragHint.Font = Enum.Font.Gotham
-dragHint.TextXAlignment = Enum.TextXAlignment.Center
-dragHint.Parent = MainFrame
-
-task.wait(3)
-dragHint:Destroy()
-
--- Sistema de notificações rápidas
-local function notify(message, color)
+-- Notificação de boas-vindas
+task.wait(0.5)
+local function showNotification(msg, color)
     local notif = Instance.new("TextLabel")
-    notif.Size = UDim2.new(1, -20, 0, 35)
-    notif.Position = UDim2.new(0, 10, 0, -40)
+    notif.Size = UDim2.new(1, -20, 0, 40)
+    notif.Position = UDim2.new(0, 10, 0, -50)
     notif.BackgroundColor3 = color
     notif.TextColor3 = Color3.new(1, 1, 1)
-    notif.Text = message
+    notif.Text = msg
     notif.TextSize = 14
     notif.Font = Enum.Font.GothamBold
     notif.TextXAlignment = Enum.TextXAlignment.Center
@@ -331,11 +409,38 @@ local function notify(message, color)
     
     notif:TweenPosition(UDim2.new(0, 10, 0, 10), "Out", "Quad", 0.3)
     task.wait(2)
-    notif:TweenPosition(UDim2.new(0, 10, 0, -40), "Out", "Quad", 0.3)
+    notif:TweenPosition(UDim2.new(0, 10, 0, -50), "Out", "Quad", 0.3)
     task.wait(0.3)
     notif:Destroy()
 end
 
--- Notificação de boas-vindas
-task.wait(0.5)
-notify("🍎 Apple Hub Pronto!", Color3.fromRGB(0, 150, 255))
+showNotification("✅ Apple Hub carregado!", Color3.fromRGB(0, 150, 255))
+
+-- 🔧 SISTEMA DE AJUSTE DE TELA MOBILE
+if isMobile then
+    -- Verificar se está cobrindo muito a tela
+    local function checkScreenCoverage()
+        local frameAbs = MainFrame.AbsoluteSize
+        local screenAbs = screenSize
+        
+        if frameAbs.Y > screenAbs.Y * 0.7 then
+            -- Reduzir altura se estiver muito grande
+            frameHeight = screenAbs.Y * 0.65
+            MainFrame.Size = UDim2.new(0, frameWidth, 0, frameHeight)
+            ScriptsFrame.Size = UDim2.new(1, -20, 1, -70)
+        end
+    end
+    
+    -- Ajustar após carregamento
+    task.wait(0.5)
+    checkScreenCoverage()
+    
+    -- Ajustar quando a tela girar
+    workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+        task.wait(0.2)
+        screenSize = workspace.CurrentCamera.ViewportSize
+        frameWidth = screenSize.X * mobileScale
+        MainFrame.Size = UDim2.new(0, frameWidth, 0, frameHeight)
+        checkScreenCoverage()
+    end)
+end
