@@ -12,7 +12,7 @@ local screenSize = workspace.CurrentCamera.ViewportSize
 
 -- Configurações básicas
 local frameWidth = isMobile and 350 or 400
-local frameHeight = 550  -- Aumentado para caber mais scripts
+local frameHeight = 600  -- Aumentado para caber mais scripts
 local startPosition = UDim2.new(0.5, -frameWidth/2, 0.5, -frameHeight/2)
 
 -- Criar GUI simples
@@ -108,7 +108,7 @@ CloseButton.Parent = TitleBar
 ScriptsFrame.Parent = MainFrame
 UIListLayout.Parent = ScriptsFrame
 
--- Lista de scripts (com Paintball adicionado)
+-- Lista de scripts (com Lennon Hub adicionado)
 local scripts = {
     {name = "Nameless Hub", icon = "👑", url = "https://raw.githubusercontent.com/ily123950/Vulkan/main/Tr"},
     {name = "Chilli Hub", icon = "🌶️", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
@@ -119,8 +119,9 @@ local scripts = {
     {name = "Chilli Private", icon = "🔓", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/PrivateServer"},
     {name = "Speed Steal", icon = "⚡", url = "https://pastebin.com/raw/rmxfZDPd"},
     {name = "Auto Ping Pong [KEY]", icon = "🏓", url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Auto%20buy%20-%20Ping%20Pong.lua"},
-    -- 🎯 NOVO SCRIPT ADICIONADO: PAINTBALL
-    {name = "Paintball Script [KEY]", icon = "🎯", url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Paintball.lua"}
+    {name = "Paintball Script [KEY]", icon = "🎯", url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Paintball.lua"},
+    -- 🎵 NOVO SCRIPT ADICIONADO: LENNON HUB
+    {name = "Lennon Hub", icon = "🎵", url = "https://raw.githubusercontent.com/mxrtnttzflw/martinetti-scripts/main/script.lua"}
 }
 
 -- Criar botões simples
@@ -209,34 +210,20 @@ for i, scriptData in ipairs(scripts) do
             button.BackgroundColor3 = Color3.fromRGB(60, 180, 80)
             label.Text = "Executado!"
             
-            -- Feedback especial para Paintball
+            -- Feedback especial para scripts específicos
             if scriptData.name == "Paintball Script" then
-                local paintballNotif = Instance.new("TextLabel")
-                paintballNotif.Size = UDim2.new(1, -20, 0, 25)
-                paintballNotif.Position = UDim2.new(0, 10, 0, -35)
-                paintballNotif.BackgroundColor3 = Color3.fromRGB(255, 87, 34)
-                paintballNotif.TextColor3 = Color3.new(1, 1, 1)
-                paintballNotif.Text = "🎯 Paintball ativado!"
-                paintballNotif.TextSize = 12
-                paintballNotif.Font = Enum.Font.GothamBold
-                paintballNotif.TextXAlignment = Enum.TextXAlignment.Center
-                
-                local notifCorner = Instance.new("UICorner")
-                notifCorner.CornerRadius = UDim.new(0, 6)
-                notifCorner.Parent = paintballNotif
-                
-                paintballNotif.Parent = MainFrame
-                
-                paintballNotif:TweenPosition(UDim2.new(0, 10, 0, 15), "Out", "Quad", 0.3)
-                task.wait(2)
-                paintballNotif:TweenPosition(UDim2.new(0, 10, 0, -35), "Out", "Quad", 0.3)
-                task.wait(0.3)
-                paintballNotif:Destroy()
+                createSpecialNotification("🎯 Paintball ativado!", Color3.fromRGB(255, 87, 34))
+            elseif scriptData.name == "Lennon Hub" then
+                createSpecialNotification("🎵 Lennon Hub carregado!", Color3.fromRGB(156, 39, 176))
             end
         else
             button.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
             label.Text = "Erro!"
             warn("Erro ao executar " .. scriptData.name .. ":", errorMsg)
+            
+            -- Mostrar erro no console
+            print("❌ Falha ao carregar: " .. scriptData.name)
+            print("📋 Erro: " .. tostring(errorMsg))
         end
         
         task.wait(1)
@@ -251,6 +238,34 @@ for i, scriptData in ipairs(scripts) do
     end
     
     button.Parent = ScriptsFrame
+end
+
+-- Função para criar notificações especiais
+function createSpecialNotification(message, color)
+    local notification = Instance.new("TextLabel")
+    notification.Size = UDim2.new(1, -20, 0, 25)
+    notification.Position = UDim2.new(0, 10, 0, -35)
+    notification.BackgroundColor3 = color
+    notification.TextColor3 = Color3.new(1, 1, 1)
+    notification.Text = message
+    notification.TextSize = 12
+    notification.Font = Enum.Font.GothamBold
+    notification.TextXAlignment = Enum.TextXAlignment.Center
+    
+    local notifCorner = Instance.new("UICorner")
+    notifCorner.CornerRadius = UDim.new(0, 6)
+    notifCorner.Parent = notification
+    
+    notification.Parent = MainFrame
+    
+    -- Animação de entrada
+    notification:TweenPosition(UDim2.new(0, 10, 0, 15), "Out", "Quad", 0.3)
+    
+    -- Remover após 2 segundos
+    task.wait(2)
+    notification:TweenPosition(UDim2.new(0, 10, 0, -35), "Out", "Quad", 0.3)
+    task.wait(0.3)
+    notification:Destroy()
 end
 
 -- Sistema de arrasto SIMPLES E FUNCIONAL
@@ -350,33 +365,52 @@ print("════════════════════════�
 print("✅ Apple Hub carregado com sucesso!")
 print("📱 Dispositivo: " .. (isMobile and "Mobile" or "PC"))
 print("🎯 Scripts: " .. #scripts .. " disponíveis")
-print("🆕 Novo: Paintball Script 🎯")
+print("🆕 Novo: Lennon Hub 🎵")
 print("🖱️  Arraste pela barra superior")
 print("════════════════════════════════")
 
 -- Notificação visual de boas-vindas
 task.wait(0.5)
-local notification = Instance.new("TextLabel")
-notification.Size = UDim2.new(1, -20, 0, 35)
-notification.Position = UDim2.new(0, 10, 0, -45)
-notification.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-notification.TextColor3 = Color3.new(1, 1, 1)
-notification.Text = "✅ Apple Hub v3.0 - Paintball Adicionado!"
-notification.TextSize = 14
-notification.Font = Enum.Font.GothamBold
-notification.TextXAlignment = Enum.TextXAlignment.Center
+local welcomeNotification = Instance.new("TextLabel")
+welcomeNotification.Size = UDim2.new(1, -20, 0, 35)
+welcomeNotification.Position = UDim2.new(0, 10, 0, -45)
+welcomeNotification.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+welcomeNotification.TextColor3 = Color3.new(1, 1, 1)
+welcomeNotification.Text = "✅ Apple Hub v3.1 - Lennon Hub Adicionado!"
+welcomeNotification.TextSize = 14
+welcomeNotification.Font = Enum.Font.GothamBold
+welcomeNotification.TextXAlignment = Enum.TextXAlignment.Center
 
-local notifCorner = Instance.new("UICorner")
-notifCorner.CornerRadius = UDim.new(0, 8)
-notifCorner.Parent = notification
+local welcomeCorner = Instance.new("UICorner")
+welcomeCorner.CornerRadius = UDim.new(0, 8)
+welcomeCorner.Parent = welcomeNotification
 
-notification.Parent = MainFrame
+welcomeNotification.Parent = MainFrame
 
 -- Animação de entrada
-notification:TweenPosition(UDim2.new(0, 10, 0, 15), "Out", "Quad", 0.3)
+welcomeNotification:TweenPosition(UDim2.new(0, 10, 0, 15), "Out", "Quad", 0.3)
 task.wait(2.5)
 
 -- Animação de saída
-notification:TweenPosition(UDim2.new(0, 10, 0, -45), "Out", "Quad", 0.3)
+welcomeNotification:TweenPosition(UDim2.new(0, 10, 0, -45), "Out", "Quad", 0.3)
 task.wait(0.3)
-notification:Destroy()
+welcomeNotification:Destroy()
+
+-- Adicionar aviso sobre Lennon Hub
+task.wait(1)
+local warningLabel = Instance.new("TextLabel")
+warningLabel.Size = UDim2.new(1, -20, 0, 40)
+warningLabel.Position = UDim2.new(0, 10, 1, -45)
+warningLabel.BackgroundColor3 = Color3.fromRGB(255, 152, 0)
+warningLabel.TextColor3 = Color3.new(1, 1, 1)
+warningLabel.Text = "⚠️ Lennon Hub: Use por sua conta e risco"
+warningLabel.TextSize = 11
+warningLabel.Font = Enum.Font.Gotham
+warningLabel.TextXAlignment = Enum.TextXAlignment.Center
+warningLabel.TextWrapped = true
+
+local warningCorner = Instance.new("UICorner")
+warningCorner.CornerRadius = UDim.new(0, 6)
+warningCorner.Parent = warningLabel
+
+warningLabel.Parent = MainFrame
