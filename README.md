@@ -12,7 +12,7 @@ local screenSize = workspace.CurrentCamera.ViewportSize
 
 -- Configurações básicas
 local frameWidth = isMobile and 350 or 400
-local frameHeight = 500
+local frameHeight = 550  -- Aumentado para caber mais scripts
 local startPosition = UDim2.new(0.5, -frameWidth/2, 0.5, -frameHeight/2)
 
 -- Criar GUI simples
@@ -108,7 +108,7 @@ CloseButton.Parent = TitleBar
 ScriptsFrame.Parent = MainFrame
 UIListLayout.Parent = ScriptsFrame
 
--- Lista de scripts (versão simplificada)
+-- Lista de scripts (com Paintball adicionado)
 local scripts = {
     {name = "Nameless Hub", icon = "👑", url = "https://raw.githubusercontent.com/ily123950/Vulkan/main/Tr"},
     {name = "Chilli Hub", icon = "🌶️", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
@@ -118,7 +118,9 @@ local scripts = {
     {name = "Admin Spam", icon = "👑", url = "https://api.luarmor.net/files/v3/loaders/fc9523e876bada3b7ed4ebe004cb8cf9.lua"},
     {name = "Chilli Private", icon = "🔓", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/PrivateServer"},
     {name = "Speed Steal", icon = "⚡", url = "https://pastebin.com/raw/rmxfZDPd"},
-    {name = "Auto Ping Pong [KEY]", icon = "🏓", url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Auto%20buy%20-%20Ping%20Pong.lua"}
+    {name = "Auto Ping Pong [KEY]", icon = "🏓", url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Auto%20buy%20-%20Ping%20Pong.lua"},
+    -- 🎯 NOVO SCRIPT ADICIONADO: PAINTBALL
+    {name = "Paintball Script [KEY]", icon = "🎯", url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Paintball.lua"}
 }
 
 -- Criar botões simples
@@ -157,9 +159,34 @@ for i, scriptData in ipairs(scripts) do
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Parent = button
     
+    -- Badge para scripts que precisam de key
+    if scriptData.name:find("%[KEY%]") then
+        local keyBadge = Instance.new("Frame")
+        keyBadge.Size = UDim2.new(0, 30, 0, 18)
+        keyBadge.Position = UDim2.new(1, -35, 0.5, -9)
+        keyBadge.BackgroundColor3 = Color3.fromRGB(255, 152, 0)
+        keyBadge.BorderSizePixel = 0
+        
+        local badgeCorner = Instance.new("UICorner")
+        badgeCorner.CornerRadius = UDim.new(0, 4)
+        badgeCorner.Parent = keyBadge
+        
+        local keyText = Instance.new("TextLabel")
+        keyText.Size = UDim2.new(1, 0, 1, 0)
+        keyText.BackgroundTransparency = 1
+        keyText.Text = "KEY"
+        keyText.TextColor3 = Color3.new(1, 1, 1)
+        keyText.TextSize = 10
+        keyText.Font = Enum.Font.GothamBold
+        keyText.Parent = keyBadge
+        
+        keyBadge.Parent = button
+    end
+    
     -- Função de execução
     button.MouseButton1Click:Connect(function()
         local originalColor = button.BackgroundColor3
+        local originalText = label.Text
         
         -- Animação de clique
         button.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
@@ -167,11 +194,13 @@ for i, scriptData in ipairs(scripts) do
         
         task.wait(0.2)
         
+        -- Configurar variáveis especiais se necessário
+        if scriptData.name == "Lag + Aura" then
+            getgenv().ServerDestroyerV6 = {Comprar = false, Spam = true}
+        end
+        
         -- Executar script
         local success, errorMsg = pcall(function()
-            if scriptData.name == "Lag + Aura" then
-                getgenv().ServerDestroyerV6 = {Comprar = false, Spam = true}
-            end
             loadstring(game:HttpGet(scriptData.url))()
         end)
         
@@ -179,15 +208,40 @@ for i, scriptData in ipairs(scripts) do
         if success then
             button.BackgroundColor3 = Color3.fromRGB(60, 180, 80)
             label.Text = "Executado!"
+            
+            -- Feedback especial para Paintball
+            if scriptData.name == "Paintball Script" then
+                local paintballNotif = Instance.new("TextLabel")
+                paintballNotif.Size = UDim2.new(1, -20, 0, 25)
+                paintballNotif.Position = UDim2.new(0, 10, 0, -35)
+                paintballNotif.BackgroundColor3 = Color3.fromRGB(255, 87, 34)
+                paintballNotif.TextColor3 = Color3.new(1, 1, 1)
+                paintballNotif.Text = "🎯 Paintball ativado!"
+                paintballNotif.TextSize = 12
+                paintballNotif.Font = Enum.Font.GothamBold
+                paintballNotif.TextXAlignment = Enum.TextXAlignment.Center
+                
+                local notifCorner = Instance.new("UICorner")
+                notifCorner.CornerRadius = UDim.new(0, 6)
+                notifCorner.Parent = paintballNotif
+                
+                paintballNotif.Parent = MainFrame
+                
+                paintballNotif:TweenPosition(UDim2.new(0, 10, 0, 15), "Out", "Quad", 0.3)
+                task.wait(2)
+                paintballNotif:TweenPosition(UDim2.new(0, 10, 0, -35), "Out", "Quad", 0.3)
+                task.wait(0.3)
+                paintballNotif:Destroy()
+            end
         else
             button.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
             label.Text = "Erro!"
-            warn("Erro ao executar:", errorMsg)
+            warn("Erro ao executar " .. scriptData.name .. ":", errorMsg)
         end
         
         task.wait(1)
         button.BackgroundColor3 = originalColor
-        label.Text = scriptData.name
+        label.Text = originalText
     end)
     
     if isMobile then
@@ -208,6 +262,11 @@ TitleBar.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         frameStart = MainFrame.Position
+        
+        -- Feedback visual no mobile
+        if isMobile then
+            TitleBar.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+        end
     end
 end)
 
@@ -226,6 +285,9 @@ end)
 TitleBar.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = false
+        if isMobile then
+            TitleBar.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+        end
     end
 end)
 
@@ -284,26 +346,37 @@ for i = 1, 10 do
 end
 
 -- Mensagem de sucesso
+print("════════════════════════════════")
 print("✅ Apple Hub carregado com sucesso!")
 print("📱 Dispositivo: " .. (isMobile and "Mobile" or "PC"))
 print("🎯 Scripts: " .. #scripts .. " disponíveis")
+print("🆕 Novo: Paintball Script 🎯")
 print("🖱️  Arraste pela barra superior")
+print("════════════════════════════════")
 
--- Notificação visual simples
+-- Notificação visual de boas-vindas
 task.wait(0.5)
 local notification = Instance.new("TextLabel")
-notification.Size = UDim2.new(1, -20, 0, 30)
-notification.Position = UDim2.new(0, 10, 0, -40)
+notification.Size = UDim2.new(1, -20, 0, 35)
+notification.Position = UDim2.new(0, 10, 0, -45)
 notification.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
 notification.TextColor3 = Color3.new(1, 1, 1)
-notification.Text = "✅ Apple Hub pronto para uso!"
+notification.Text = "✅ Apple Hub v3.0 - Paintball Adicionado!"
 notification.TextSize = 14
-notification.Font = Enum.Font.Gotham
+notification.Font = Enum.Font.GothamBold
+notification.TextXAlignment = Enum.TextXAlignment.Center
+
+local notifCorner = Instance.new("UICorner")
+notifCorner.CornerRadius = UDim.new(0, 8)
+notifCorner.Parent = notification
 
 notification.Parent = MainFrame
 
-notification:TweenPosition(UDim2.new(0, 10, 0, 10), "Out", "Quad", 0.3)
-task.wait(2)
-notification:TweenPosition(UDim2.new(0, 10, 0, -40), "Out", "Quad", 0.3)
+-- Animação de entrada
+notification:TweenPosition(UDim2.new(0, 10, 0, 15), "Out", "Quad", 0.3)
+task.wait(2.5)
+
+-- Animação de saída
+notification:TweenPosition(UDim2.new(0, 10, 0, -45), "Out", "Quad", 0.3)
 task.wait(0.3)
 notification:Destroy()
