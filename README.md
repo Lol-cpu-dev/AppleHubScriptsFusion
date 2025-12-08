@@ -14,14 +14,14 @@ print("📱 Dispositivo: " .. (isMobile and "Mobile" or "PC"))
 print("📏 Tamanho da tela: " .. screenSize.X .. "x" .. screenSize.Y)
 
 -- 🔧 CONFIGURAÇÃO ESPECIAL PARA MOBILE
-local frameWidth = 320  -- Largura fixa menor para mobile
-local frameHeight = 500  -- Altura reduzida
-local startPosition = UDim2.new(0.5, -frameWidth/2, 0.3, 0)  -- Posicionado mais alto
+local frameWidth = 330  -- Largura aumentada para caber "NEED KEY"
+local frameHeight = 520  -- Altura ajustada
+local startPosition = UDim2.new(0.5, -frameWidth/2, 0.25, 0)  -- Mais alto
 
 -- Se for PC, usar configurações diferentes
 if not isMobile then
-    frameWidth = 380
-    frameHeight = 550
+    frameWidth = 400
+    frameHeight = 570
     startPosition = UDim2.new(0.5, -frameWidth/2, 0.5, -frameHeight/2)
 end
 
@@ -132,7 +132,7 @@ ScriptsContainer.Parent = MainFrame
 ScriptsFrame.Parent = ScriptsContainer
 UIListLayout.Parent = ScriptsFrame
 
--- Lista de scripts OTIMIZADA
+-- 🎯 LISTA DE SCRIPTS ATUALIZADA (com Paintball [OP NEED KEY])
 local scripts = {
     {name = "Nameless", icon = "👑", color = Color3.fromRGB(255, 215, 0), url = "https://raw.githubusercontent.com/ily123950/Vulkan/main/Tr"},
     {name = "Chilli", icon = "🌶️", color = Color3.fromRGB(255, 69, 58), url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
@@ -142,15 +142,16 @@ local scripts = {
     {name = "Admin Spam", icon = "👑", color = Color3.fromRGB(255, 215, 0), url = "https://api.luarmor.net/files/v3/loaders/fc9523e876bada3b7ed4ebe004cb8cf9.lua"},
     {name = "Chilli Private", icon = "🔓", color = Color3.fromRGB(0, 200, 83), url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/PrivateServer"},
     {name = "Speed Steal", icon = "⚡", color = Color3.fromRGB(0, 150, 255), url = "https://pastebin.com/raw/rmxfZDPd"},
-    {name = "Auto Ping Pong", icon = "🏓", color = Color3.fromRGB(0, 230, 118), url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Auto%20buy%20-%20Ping%20Pong.lua"},
-    {name = "Paintball", icon = "🎯", color = Color3.fromRGB(255, 87, 34), url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Paintball.lua"},
+    {name = "Auto Ping Pong [KEY]", icon = "🏓", color = Color3.fromRGB(0, 230, 118), url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Auto%20buy%20-%20Ping%20Pong.lua"},
+    -- 🎯 PAINTBALL [OP NEED KEY] ADICIONADO
+    {name = "Paintball [OP KEY]", icon = "🎯", color = Color3.fromRGB(255, 87, 34), url = "https://raw.githubusercontent.com/LucasggkX/Games/main/Paintball.lua", specialBadge = true},
     {name = "Lennon Hub", icon = "🎵", color = Color3.fromRGB(156, 39, 176), url = "https://raw.githubusercontent.com/mxrtnttzflw/martinetti-scripts/main/script.lua"}
 }
 
 -- 🔧 FUNÇÃO PARA CRIAR BOTÕES OTIMIZADOS
 local function createMobileButton(scriptData, index)
     local button = Instance.new("TextButton")
-    button.Name = "Btn_" .. scriptData.name
+    button.Name = "Btn_" .. scriptData.name:gsub("%[", ""):gsub("%]", ""):gsub(" ", "_")
     button.Size = UDim2.new(0.92, 0, 0, isMobile and 55 or 50)
     button.BackgroundColor3 = Color3.fromRGB(40, 40, 46)
     button.BorderSizePixel = 0
@@ -172,24 +173,80 @@ local function createMobileButton(scriptData, index)
     icon.Font = Enum.Font.GothamBold
     icon.Parent = button
     
-    -- Nome
+    -- Nome (truncado se necessário)
     local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, -50, 1, 0)
-    label.Position = UDim2.new(0, 50, 0, 0)
+    label.Size = UDim2.new(1, -50, 0.6, 0)
+    label.Position = UDim2.new(0, 50, 0.1, 0)
     label.BackgroundTransparency = 1
     label.Text = scriptData.name
-    label.TextSize = isMobile and 15 or 14
+    label.TextSize = isMobile and 14 or 13
     label.TextColor3 = Color3.new(1, 1, 1)
     label.Font = Enum.Font.GothamBold
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.TextTruncate = Enum.TextTruncate.AtEnd
     label.Parent = button
     
-    -- Badge KEY se necessário
-    if scriptData.name == "Auto Ping Pong" then
+    -- Subtítulo para scripts com KEY
+    if scriptData.name:find("%[KEY%]") or scriptData.name:find("KEY") then
+        local subtitle = Instance.new("TextLabel")
+        subtitle.Size = UDim2.new(1, -50, 0.4, 0)
+        subtitle.Position = UDim2.new(0, 50, 0.6, 0)
+        subtitle.BackgroundTransparency = 1
+        subtitle.Text = "NEED KEY"
+        subtitle.TextSize = isMobile and 11 or 10
+        subtitle.TextColor3 = Color3.fromRGB(255, 152, 0)
+        subtitle.Font = Enum.Font.GothamBold
+        subtitle.TextXAlignment = Enum.TextXAlignment.Left
+        subtitle.Parent = button
+    end
+    
+    -- Badge KEY duplo para Paintball [OP KEY]
+    if scriptData.name == "Paintball [OP KEY]" then
         local keyBadge = Instance.new("Frame")
-        keyBadge.Size = UDim2.new(0, 28, 0, 16)
-        keyBadge.Position = UDim2.new(1, -32, 0.5, -8)
+        keyBadge.Size = UDim2.new(0, 45, 0, 18)
+        keyBadge.Position = UDim2.new(1, -50, 0.5, -9)
+        keyBadge.BackgroundColor3 = Color3.fromRGB(255, 87, 34)  -- Laranja do Paintball
+        
+        local badgeCorner = Instance.new("UICorner")
+        badgeCorner.CornerRadius = UDim.new(0, 4)
+        badgeCorner.Parent = keyBadge
+        
+        local keyText = Instance.new("TextLabel")
+        keyText.Size = UDim2.new(1, 0, 1, 0)
+        keyText.BackgroundTransparency = 1
+        keyText.Text = "OP KEY"
+        keyText.TextColor3 = Color3.new(1, 1, 1)
+        keyText.TextSize = 9
+        keyText.Font = Enum.Font.GothamBold
+        keyText.Parent = keyBadge
+        
+        keyBadge.Parent = button
+        
+        -- Badge extra "OP"
+        local opBadge = Instance.new("Frame")
+        opBadge.Size = UDim2.new(0, 25, 0, 15)
+        opBadge.Position = UDim2.new(0, 5, 0, 5)
+        opBadge.BackgroundColor3 = Color3.fromRGB(255, 215, 0)  -- Dourado
+        
+        local opCorner = Instance.new("UICorner")
+        opCorner.CornerRadius = UDim.new(0, 3)
+        opCorner.Parent = opBadge
+        
+        local opText = Instance.new("TextLabel")
+        opText.Size = UDim2.new(1, 0, 1, 0)
+        opText.BackgroundTransparency = 1
+        opText.Text = "OP"
+        opText.TextColor3 = Color3.new(0, 0, 0)
+        opText.TextSize = 8
+        opText.Font = Enum.Font.GothamBold
+        opText.Parent = opBadge
+        
+        opBadge.Parent = button
+    elseif scriptData.name == "Auto Ping Pong [KEY]" then
+        -- Badge para Auto Ping Pong
+        local keyBadge = Instance.new("Frame")
+        keyBadge.Size = UDim2.new(0, 30, 0, 16)
+        keyBadge.Position = UDim2.new(1, -35, 0.5, -8)
         keyBadge.BackgroundColor3 = Color3.fromRGB(255, 152, 0)
         
         local badgeCorner = Instance.new("UICorner")
@@ -268,6 +325,33 @@ for i, scriptData in ipairs(scripts) do
             button.BackgroundColor3 = Color3.fromRGB(60, 180, 80)
             icon.Text = "✅"
             label.Text = "Sucesso!"
+            
+            -- Feedback especial para Paintball [OP KEY]
+            if scriptData.name == "Paintball [OP KEY]" then
+                task.wait(0.5)
+                local specialNotif = Instance.new("TextLabel")
+                specialNotif.Size = UDim2.new(1, -20, 0, 30)
+                specialNotif.Position = UDim2.new(0, 10, 0, -35)
+                specialNotif.BackgroundColor3 = Color3.fromRGB(255, 87, 34)
+                specialNotif.TextColor3 = Color3.new(1, 1, 1)
+                specialNotif.Text = "🎯 Paintball OP ativado!"
+                specialNotif.TextSize = 13
+                specialNotif.Font = Enum.Font.GothamBold
+                specialNotif.TextXAlignment = Enum.TextXAlignment.Center
+                
+                local notifCorner = Instance.new("UICorner")
+                notifCorner.CornerRadius = UDim.new(0, 6)
+                notifCorner.Parent = specialNotif
+                
+                specialNotif.Parent = MainFrame
+                
+                specialNotif:TweenPosition(UDim2.new(0, 10, 0, 15), "Out", "Quad", 0.3)
+                task.wait(2.5)
+                specialNotif:TweenPosition(UDim2.new(0, 10, 0, -35), "Out", "Quad", 0.3)
+                task.wait(0.3)
+                specialNotif:Destroy()
+            end
+            
             print("✅ " .. scriptData.name .. " executado!")
         else
             button.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
@@ -398,6 +482,7 @@ print("════════════════════════�
 print("🍎 APPLE HUB MOBILE FIX")
 print("📱 Otimizado para: " .. (isMobile and "MOBILE" or "PC"))
 print("🎯 Scripts: " .. #scripts)
+print("🆕 NOVO: Paintball [OP KEY] 🎯")
 print("📏 Tamanho: " .. frameWidth .. "x" .. frameHeight)
 print("════════════════════════════════")
 
@@ -409,8 +494,8 @@ notif.Size = UDim2.new(1, -20, 0, 35)
 notif.Position = UDim2.new(0, 10, 0, -40)
 notif.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
 notif.TextColor3 = Color3.new(1, 1, 1)
-notif.Text = "✅ Mobile otimizado!"
-notif.TextSize = 14
+notif.Text = "✅ Paintball [OP KEY] adicionado!"
+notif.TextSize = isMobile and 13 or 14
 notif.Font = Enum.Font.GothamBold
 notif.TextXAlignment = Enum.TextXAlignment.Center
 
@@ -434,14 +519,14 @@ if isMobile then
         
         if viewport.Y > viewport.X then
             -- Portrait (vertical)
-            frameWidth = math.min(320, viewport.X * 0.85)
+            frameWidth = math.min(330, viewport.X * 0.9)
         else
             -- Landscape (horizontal)
-            frameWidth = math.min(400, viewport.X * 0.6)
+            frameWidth = math.min(420, viewport.X * 0.7)
         end
         
         MainFrame.Size = UDim2.new(0, frameWidth, 0, frameHeight)
-        MainFrame.Position = UDim2.new(0.5, -frameWidth/2, 0.3, 0)
+        MainFrame.Position = UDim2.new(0.5, -frameWidth/2, 0.25, 0)
     end
     
     -- Ajustar inicialmente
@@ -450,3 +535,21 @@ if isMobile then
     -- Ajustar quando a tela mudar
     workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustForOrientation)
 end
+
+-- 🔧 AVISO PARA SCRIPTS COM KEY
+local keyWarning = Instance.new("TextLabel")
+keyWarning.Size = UDim2.new(1, -20, 0, 25)
+keyWarning.Position = UDim2.new(0, 10, 1, -30)
+keyWarning.BackgroundColor3 = Color3.fromRGB(255, 152, 0)
+keyWarning.TextColor3 = Color3.new(1, 1, 1)
+keyWarning.Text = "⚠️ Scripts com KEY precisam de chave"
+keyWarning.TextSize = isMobile and 11 or 10
+keyWarning.Font = Enum.Font.Gotham
+keyWarning.TextXAlignment = Enum.TextXAlignment.Center
+keyWarning.TextWrapped = true
+
+local warningCorner = Instance.new("UICorner")
+warningCorner.CornerRadius = UDim.new(0, 6)
+warningCorner.Parent = keyWarning
+
+keyWarning.Parent = MainFrame
