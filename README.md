@@ -22,9 +22,9 @@ getgenv().AppleHubUltra = {
 
 -- 🔥 WHITELIST DE USUÁRIOS AUTORIZADOS
 local WHITELISTED_USERS = {
-    "SeuNickAqui",  -- ⚠️ SUBSTITUA PELO SEU NICK!
-    "PlayerPro",
-    "TestUser",
+    "el_gato9997",  -- ⚠️ SUBSTITUA PELO SEU NICK!
+    "contadebrainrotr",
+    "hekx6w",
     "Admin",
     "VIPPlayer"
 }
@@ -822,7 +822,7 @@ local deadScripts = {
         icon = "💎", 
         color = colorPalette.dead, 
         description = "Farm automático de bond no Dead Rails",
-        url = "https://api.getpolsec.com/scripts/files/8296210a2f042b36145c0db05bd725f73dcf465e2cd54e02ee843c6578a40a91.lua"
+        url = "https://raw.githubusercontent.com/Lol-cpu-dev/AppleHubBondFarm/refs/heads/main/README.md"
     }
 }
 
