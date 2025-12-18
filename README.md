@@ -1,19 +1,20 @@
--- 🍎 APPLE HUB ULTRA - VERSÃO COMPLETA
+-- 🍎 APPLE HUB ULTRA - VERSÃO 4 ABAS
 -- 📱💻 Totalmente otimizado para ambos dispositivos
 -- 🎮 ABA SAB - Scripts Steal a Brainrot + ICE HUB
 -- 🌙 ABA 99 NIGHTS - Fox Hub
 -- ⛏️ ABA DIG TO ESCAPE - Item TP
+-- 💀 ABA DEAD RAILS - Auto Farm Bond
 -- 🔒 SISTEMA DE WHITELIST POR NICK
 
 -- ============================================
 -- CONFIGURAÇÃO INICIAL RESPONSIVA
 -- ============================================
 
-print("🚀 INICIANDO APPLE HUB ULTRA - VERSÃO COMPLETA...")
+print("🚀 INICIANDO APPLE HUB ULTRA - 4 ABAS...")
 
 -- Configurações globais
 getgenv().AppleHubUltra = {
-    Version = "5.0.0",
+    Version = "6.0.0",
     WhitelistEnabled = true,
     DebugMode = false,
     MaxWhitelistUsers = 50
@@ -21,13 +22,11 @@ getgenv().AppleHubUltra = {
 
 -- 🔥 WHITELIST DE USUÁRIOS AUTORIZADOS
 local WHITELISTED_USERS = {
-    "contadebrainrotr",  -- ⚠️ SUBSTITUA PELO SEU NICK!
-    "hekx6w",
-    "hekx6w2",
-    "hekx6w3",
-    "hekx6w4",
-	"el_gato9997",
-	"Ktx_20250"
+    "SeuNickAqui",  -- ⚠️ SUBSTITUA PELO SEU NICK!
+    "PlayerPro",
+    "TestUser",
+    "Admin",
+    "VIPPlayer"
 }
 
 -- ============================================
@@ -177,44 +176,44 @@ local function getUltraSettings()
     if isMobile then
         return {
             width = math.min(400, screenSize.X * 0.94),
-            height = 700,
-            buttonHeight = 58,
+            height = 720,
+            buttonHeight = 56,
             titleSize = 20,
-            textSize = 15,
-            iconSize = 28,
-            buttonSpacing = 12,
+            textSize = 14,
+            iconSize = 26,
+            buttonSpacing = 10,
             startPos = UDim2.new(0.5, 0, 0.22, 0),
             anchor = Vector2.new(0.5, 0),
-            scrollThickness = 7,
-            badgeSize = 36,
-            badgeText = 10,
-            notificationHeight = 42,
-            categoryHeight = 48,
-            tabButtonHeight = 42,
+            scrollThickness = 6,
+            badgeSize = 34,
+            badgeText = 9,
+            notificationHeight = 40,
+            categoryHeight = 46,
+            tabButtonHeight = 40,
             headerHeight = 80,
-            borderRadius = 18,
-            buttonRadius = 11
+            borderRadius = 16,
+            buttonRadius = 10
         }
     else
         return {
-            width = 500,
-            height = 750,
-            buttonHeight = 54,
+            width = 520,
+            height = 780,
+            buttonHeight = 52,
             titleSize = 22,
-            textSize = 16,
-            iconSize = 26,
-            buttonSpacing = 14,
+            textSize = 15,
+            iconSize = 24,
+            buttonSpacing = 12,
             startPos = UDim2.new(0.5, 0, 0.5, 0),
             anchor = Vector2.new(0.5, 0.5),
-            scrollThickness = 6,
-            badgeSize = 32,
-            badgeText = 9,
-            notificationHeight = 38,
-            categoryHeight = 46,
-            tabButtonHeight = 40,
+            scrollThickness = 5,
+            badgeSize = 30,
+            badgeText = 8,
+            notificationHeight = 36,
+            categoryHeight = 44,
+            tabButtonHeight = 38,
             headerHeight = 78,
-            borderRadius = 16,
-            buttonRadius = 9
+            borderRadius = 14,
+            buttonRadius = 8
         }
     end
 end
@@ -240,10 +239,11 @@ local colorPalette = {
     light1 = Color3.new(1, 1, 1),
     light2 = Color3.fromRGB(220, 220, 220),
     light3 = Color3.fromRGB(180, 180, 200),
-    sab = Color3.fromRGB(0, 150, 255),       -- Azul para SAB
-    nights = Color3.fromRGB(255, 140, 0),    -- Laranja para 99 Nights
-    dig = Color3.fromRGB(160, 120, 80),      -- Marrom para Dig to Escape
-    ice = Color3.fromRGB(0, 200, 255)        -- Azul claro para Ice Hub
+    sab = Color3.fromRGB(0, 150, 255),        -- Azul para SAB
+    nights = Color3.fromRGB(255, 140, 0),     -- Laranja para 99 Nights
+    dig = Color3.fromRGB(160, 120, 80),       -- Marrom para Dig to Escape
+    dead = Color3.fromRGB(178, 34, 34),       -- Vermelho para Dead Rails
+    ice = Color3.fromRGB(0, 200, 255)         -- Azul claro para Ice Hub
 }
 
 -- ============================================
@@ -333,7 +333,7 @@ local Subtitle = Instance.new("TextLabel")
 Subtitle.Size = UDim2.new(1, 0, 0.4, 0)
 Subtitle.Position = UDim2.new(0, 0, 0, settings.headerHeight * 0.55)
 Subtitle.BackgroundTransparency = 1
-Subtitle.Text = "v" .. getgenv().AppleHubUltra.Version .. " | SAB + 99 NIGHTS + DIG TO ESCAPE"
+Subtitle.Text = "v" .. getgenv().AppleHubUltra.Version .. " | 4 ABAS COMPLETAS"
 Subtitle.TextSize = isMobile and 11 or 10
 Subtitle.TextColor3 = colorPalette.light3
 Subtitle.Font = Enum.Font.GothamMedium
@@ -437,7 +437,7 @@ if not isMobile then
 end
 
 -- ============================================
--- SISTEMA DE 3 ABAS
+-- SISTEMA DE 4 ABAS
 -- ============================================
 
 local SideTabsContainer = Instance.new("Frame")
@@ -455,7 +455,7 @@ SABTab.Position = UDim2.new(0, 0, 0, 0)
 SABTab.BackgroundColor3 = colorPalette.dark3
 SABTab.Text = "🎮 SAB"
 SABTab.TextColor3 = colorPalette.sab
-SABTab.TextSize = isMobile and 14 or 13
+SABTab.TextSize = isMobile and 13 or 12
 SABTab.Font = Enum.Font.GothamBold
 SABTab.AutoButtonColor = false
 
@@ -467,12 +467,12 @@ SABTabCorner.Parent = SABTab
 local NightsTab = Instance.new("TextButton")
 NightsTab.Name = "NightsTab"
 NightsTab.Size = UDim2.new(1, 0, 0, settings.tabButtonHeight)
-NightsTab.Position = UDim2.new(0, 0, 0, settings.tabButtonHeight + 8)
+NightsTab.Position = UDim2.new(0, 0, 0, settings.tabButtonHeight + 6)
 NightsTab.BackgroundColor3 = colorPalette.dark2
 NightsTab.Text = "🌙 99 NIGHTS"
 NightsTab.TextColor3 = colorPalette.light3
-NightsTab.TextSize = isMobile and 13 or 12
-SABTab.Font = Enum.Font.GothamBold
+NightsTab.TextSize = isMobile and 12 or 11
+NightsTab.Font = Enum.Font.GothamBold
 NightsTab.AutoButtonColor = false
 
 local NightsTabCorner = Instance.new("UICorner")
@@ -483,11 +483,11 @@ NightsTabCorner.Parent = NightsTab
 local DigTab = Instance.new("TextButton")
 DigTab.Name = "DigTab"
 DigTab.Size = UDim2.new(1, 0, 0, settings.tabButtonHeight)
-DigTab.Position = UDim2.new(0, 0, 0, (settings.tabButtonHeight + 8) * 2)
+DigTab.Position = UDim2.new(0, 0, 0, (settings.tabButtonHeight + 6) * 2)
 DigTab.BackgroundColor3 = colorPalette.dark2
 DigTab.Text = "⛏️ DIG TO ESCAPE"
 DigTab.TextColor3 = colorPalette.light3
-DigTab.TextSize = isMobile and 12 or 11
+DigTab.TextSize = isMobile and 11 or 10
 DigTab.Font = Enum.Font.GothamBold
 DigTab.AutoButtonColor = false
 
@@ -495,9 +495,26 @@ local DigTabCorner = Instance.new("UICorner")
 DigTabCorner.CornerRadius = UDim.new(0, settings.buttonRadius)
 DigTabCorner.Parent = DigTab
 
+-- Aba Dead Rails
+local DeadTab = Instance.new("TextButton")
+DeadTab.Name = "DeadTab"
+DeadTab.Size = UDim2.new(1, 0, 0, settings.tabButtonHeight)
+DeadTab.Position = UDim2.new(0, 0, 0, (settings.tabButtonHeight + 6) * 3)
+DeadTab.BackgroundColor3 = colorPalette.dark2
+DeadTab.Text = "💀 DEAD RAILS"
+DeadTab.TextColor3 = colorPalette.light3
+DeadTab.TextSize = isMobile and 11 or 10
+DeadTab.Font = Enum.Font.GothamBold
+DeadTab.AutoButtonColor = false
+
+local DeadTabCorner = Instance.new("UICorner")
+DeadTabCorner.CornerRadius = UDim.new(0, settings.buttonRadius)
+DeadTabCorner.Parent = DeadTab
+
 SABTab.Parent = SideTabsContainer
 NightsTab.Parent = SideTabsContainer
 DigTab.Parent = SideTabsContainer
+DeadTab.Parent = SideTabsContainer
 
 -- ============================================
 -- CONTAINER DE CONTEÚDO
@@ -552,6 +569,20 @@ DigContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
 DigContainer.Visible = false
 DigContainer.Parent = ContentContainer
 
+-- Container para Dead Rails
+local DeadContainer = Instance.new("ScrollingFrame")
+DeadContainer.Name = "DeadContainer"
+DeadContainer.Size = UDim2.new(1, 0, 1, 0)
+DeadContainer.Position = UDim2.new(0, 0, 0, 0)
+DeadContainer.BackgroundTransparency = 1
+DeadContainer.ScrollBarThickness = settings.scrollThickness
+DeadContainer.ScrollBarImageColor3 = colorPalette.light3
+DeadContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
+DeadContainer.ScrollingEnabled = true
+DeadContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+DeadContainer.Visible = false
+DeadContainer.Parent = ContentContainer
+
 local SABLayout = Instance.new("UIListLayout")
 SABLayout.Padding = UDim.new(0, settings.buttonSpacing)
 SABLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -569,6 +600,12 @@ DigLayout.Padding = UDim.new(0, settings.buttonSpacing)
 DigLayout.SortOrder = Enum.SortOrder.LayoutOrder
 DigLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 DigLayout.Parent = DigContainer
+
+local DeadLayout = Instance.new("UIListLayout")
+DeadLayout.Padding = UDim.new(0, settings.buttonSpacing)
+DeadLayout.SortOrder = Enum.SortOrder.LayoutOrder
+DeadLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+DeadLayout.Parent = DeadContainer
 
 -- ============================================
 -- SISTEMA DE NOTIFICAÇÕES
@@ -641,9 +678,13 @@ local function switchTab(tabName)
     DigTab.BackgroundColor3 = colorPalette.dark2
     DigTab.TextColor3 = colorPalette.light3
     
+    DeadTab.BackgroundColor3 = colorPalette.dark2
+    DeadTab.TextColor3 = colorPalette.light3
+    
     SABContainer.Visible = false
     NightsContainer.Visible = false
     DigContainer.Visible = false
+    DeadContainer.Visible = false
     
     -- Ativar aba selecionada
     if tabName == "SAB" then
@@ -663,17 +704,25 @@ local function switchTab(tabName)
         DigTab.TextColor3 = colorPalette.dig
         DigContainer.Visible = true
         showNotification("⛏️ Aba Dig to Escape ativada", colorPalette.dig, 2, "⛏️")
+        
+    elseif tabName == "DEAD" then
+        DeadTab.BackgroundColor3 = colorPalette.dark3
+        DeadTab.TextColor3 = colorPalette.dead
+        DeadContainer.Visible = true
+        showNotification("💀 Aba Dead Rails ativada", colorPalette.dead, 2, "💀")
     end
 end
 
 SABTab.MouseButton1Click:Connect(function() switchTab("SAB") end)
 NightsTab.MouseButton1Click:Connect(function() switchTab("99NIGHTS") end)
 DigTab.MouseButton1Click:Connect(function() switchTab("DIG") end)
+DeadTab.MouseButton1Click:Connect(function() switchTab("DEAD") end)
 
 if isMobile then
     SABTab.TouchTap:Connect(function() switchTab("SAB") end)
     NightsTab.TouchTap:Connect(function() switchTab("99NIGHTS") end)
     DigTab.TouchTap:Connect(function() switchTab("DIG") end)
+    DeadTab.TouchTap:Connect(function() switchTab("DEAD") end)
 end
 
 -- ============================================
@@ -736,7 +785,7 @@ local sabScripts = {
 }
 
 -- ============================================
--- LISTA DE SCRIPTS 99 NIGHTS (APENAS FOX HUB)
+-- LISTA DE SCRIPTS 99 NIGHTS
 -- ============================================
 
 local nightsScripts = {
@@ -760,6 +809,20 @@ local digScripts = {
         color = colorPalette.dig, 
         description = "Teleporte automático para itens no Dig to Escape",
         url = "https://raw.githubusercontent.com/SlayingAgain/Hook-Software/refs/heads/main/Dig-to-Escape"
+    }
+}
+
+-- ============================================
+-- LISTA DE SCRIPTS DEAD RAILS
+-- ============================================
+
+local deadScripts = {
+    {
+        name = "AUTO FARM BOND", 
+        icon = "💎", 
+        color = colorPalette.dead, 
+        description = "Farm automático de bond no Dead Rails",
+        url = "https://api.getpolsec.com/scripts/files/8296210a2f042b36145c0db05bd725f73dcf465e2cd54e02ee843c6578a40a91.lua"
     }
 }
 
@@ -870,7 +933,6 @@ for i, scriptData in ipairs(sabScripts) do
             end
             
             if scriptData.name == "ICE HUB" then
-                -- Executar ICE HUB
                 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/26a720688fde4907da845a1314a1ce5e.lua"))()
             else
                 local scriptContent = game:HttpGet(scriptData.url, true)
@@ -900,7 +962,7 @@ for i, scriptData in ipairs(sabScripts) do
     end)
 end
 
-print("✅ " .. #sabScripts .. " scripts SAB criados (incluindo ICE HUB)")
+print("✅ " .. #sabScripts .. " scripts SAB criados")
 
 -- ============================================
 -- CRIAR SCRIPTS 99 NIGHTS
@@ -935,7 +997,7 @@ for i, scriptData in ipairs(nightsScripts) do
     end)
 end
 
-print("✅ " .. #nightsScripts .. " script 99 Nights criado (FOX HUB)")
+print("✅ " .. #nightsScripts .. " script 99 Nights criado")
 
 -- ============================================
 -- CRIAR SCRIPTS DIG TO ESCAPE
@@ -970,7 +1032,42 @@ for i, scriptData in ipairs(digScripts) do
     end)
 end
 
-print("✅ " .. #digScripts .. " script Dig to Escape criado (ITEM TP)")
+print("✅ " .. #digScripts .. " script Dig to Escape criado")
+
+-- ============================================
+-- CRIAR SCRIPTS DEAD RAILS
+-- ============================================
+
+for i, scriptData in ipairs(deadScripts) do
+    local button, border = createUltraButton(scriptData, i, DeadContainer, true)
+    
+    button.MouseButton1Click:Connect(function()
+        local originalIcon = button.Icon.Text
+        
+        button.Icon.Text = "⏳"
+        
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://api.getpolsec.com/scripts/files/8296210a2f042b36145c0db05bd725f73dcf465e2cd54e02ee843c6578a40a91.lua"))()
+        end)
+        
+        if success then
+            button.Icon.Text = "✅"
+            border.Color = colorPalette.success
+            showNotification("💀 AUTO FARM BOND carregado com sucesso!", colorPalette.dead, 3, "💀")
+        else
+            button.Icon.Text = "❌"
+            border.Color = colorPalette.danger
+            showNotification("❌ Erro ao carregar AUTO FARM BOND", colorPalette.danger, 3, "❌")
+        end
+        
+        task.wait(1.5)
+        
+        button.Icon.Text = originalIcon
+        border.Color = scriptData.color
+    end)
+end
+
+print("✅ " .. #deadScripts .. " script Dead Rails criado")
 
 -- ============================================
 -- FUNCIONALIDADES DOS BOTÕES DE CONTROLE
@@ -1050,7 +1147,7 @@ footerCorner.Parent = footer
 local footerText = Instance.new("TextLabel")
 footerText.Size = UDim2.new(1, 0, 1, 0)
 footerText.BackgroundTransparency = 1
-footerText.Text = "🎮 SAB: " .. #sabScripts .. " | 🌙 99 NIGHTS: 1 | ⛏️ DIG: 1 | 🔒 Whitelist"
+footerText.Text = "🎮 SAB: " .. #sabScripts .. " | 🌙 99 N: 1 | ⛏️ DIG: 1 | 💀 DEAD: 1"
 footerText.TextSize = isMobile and 10 or 9
 footerText.TextColor3 = colorPalette.light3
 footerText.Font = Enum.Font.GothamMedium
@@ -1068,6 +1165,7 @@ task.spawn(function()
         SABContainer.CanvasSize = UDim2.new(0, 0, 0, SABLayout.AbsoluteContentSize.Y + 20)
         NightsContainer.CanvasSize = UDim2.new(0, 0, 0, NightsLayout.AbsoluteContentSize.Y + 20)
         DigContainer.CanvasSize = UDim2.new(0, 0, 0, DigLayout.AbsoluteContentSize.Y + 20)
+        DeadContainer.CanvasSize = UDim2.new(0, 0, 0, DeadLayout.AbsoluteContentSize.Y + 20)
         task.wait(0.5)
     end
 end)
@@ -1079,9 +1177,10 @@ end)
 task.wait(1)
 showNotification(
     "🍎 APPLE HUB ULTRA v" .. getgenv().AppleHubUltra.Version .. 
-    "\n🎮 SAB: " .. #sabScripts .. " scripts (com ICE HUB)" ..
+    "\n🎮 SAB: " .. #sabScripts .. " scripts" ..
     "\n🌙 99 NIGHTS: Fox Hub" ..
     "\n⛏️ DIG TO ESCAPE: Item TP" ..
+    "\n💀 DEAD RAILS: Auto Farm Bond" ..
     "\n👤 Usuário: " .. player.Name,
     colorPalette.primary,
     5,
@@ -1160,11 +1259,12 @@ print("📱 Plataforma: " .. (isMobile and "MOBILE" or "PC"))
 print("🎮 SAB: " .. #sabScripts .. " scripts (com ICE HUB)")
 print("🌙 99 NIGHTS: Fox Hub")
 print("⛏️ DIG TO ESCAPE: Item TP")
+print("💀 DEAD RAILS: Auto Farm Bond")
 print(string.rep("=", 50))
 print("🎮 CONTROLES:")
 print("• RightShift/F10: Abrir/fechar hub")
 print("• Arraste o cabeçalho: Mover hub")
 print("• Botão 🍎 (mobile): Abrir hub")
 print(string.rep("=", 50))
-print("🔥 HUB ULTRA PRONTO PARA USO!")
+print("🔥 HUB ULTRA COM 4 ABAS PRONTO PARA USO!")
 print(string.rep("=", 50))
