@@ -25,7 +25,7 @@ local WHITELISTED_USERS = {
     "el_gato9997",  -- ⚠️ SUBSTITUA PELO SEU NICK!
     "contadebrainrotr",
     "hekx6w",
-    "Admin",
+    "Ktx_20250",
     "VIPPlayer"
 }
 
