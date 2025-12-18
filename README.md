@@ -1047,7 +1047,7 @@ for i, scriptData in ipairs(deadScripts) do
         button.Icon.Text = "⏳"
         
         local success, err = pcall(function()
-            loadstring(game:HttpGet("https://api.getpolsec.com/scripts/files/8296210a2f042b36145c0db05bd725f73dcf465e2cd54e02ee843c6578a40a91.lua"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Lol-cpu-dev/AppleHubBondFarm/refs/heads/main/README.md"))()
         end)
         
         if success then
