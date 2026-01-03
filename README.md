@@ -26,7 +26,7 @@ local WHITELISTED_USERS = {
     "contadebrainrotr",
     "hekx6w",
     "Ktx_20250",
-    "VIPPlayer"
+    "theozim_007"
 }
 
 -- ============================================
